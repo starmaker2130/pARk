@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>public Augmented Reality kinectome v. 0.0.1</title>
+    <link rel='stylesheet' href='../css/main.css' type='text/css'/>
+    <script>
+        var sessionManager = {
+            viewMode: 'all', //or 'region'
+            inPreview: null,
+            DOM: [
+                'acornpark-selector',
+                'park-des-princes-selector',
+                'park-du-pool-selector',
+                'united-states-region-selector',
+                'france-region-selector',
+                'congo-region-selector',
+            ]
+        };
+        
+        function attachListeners(item){
+            var i = item;
+            sessionManager.DOM[i] = document.getElementById(sessionManager.DOM[i]);
+            console.log(`added event listener for ${i}`);
+        }
+        
+        function hide(hideTheseItems) {
+            var target = hideTheseItems;
+            for(var j=0; j< target.length; j++){
+                sessionManager.DOM[target[j]].style.display = 'none';
+            }
+        }
+        
+        function hideMainActionButtons(){
+            document.querySelector('#acornpark-selector').style.display = 'block';
+            document.querySelector('#park-des-princes-selector').style.display = 'block';
+            document.querySelector('#park-du-pool-selector').style.display = 'block';
+
+            let hideStart = Date.now();
+            let hideTimer = setInterval(function() {
+              // how much time passed from the start?
+                let timePassed = Date.now() - hideStart;
+
+                if (timePassed >= 500) {
+                    document.querySelector('#enter-button').style.display = 'none';
+                    document.querySelector('#back-button').style.display = 'none';
+                    clearInterval(hideTimer); // finish the animation after 2 seconds
+                    return;
+                }
+
+                document.querySelector('#enter-button').style.opacity = (500-timePassed) / 500 + '';
+                document.querySelector('#back-button').style.opacity = (500-timePassed) / 500 + '';
+
+            }, 10);
+        }
+        
+        function revealMainActionButtons(){
+            document.querySelector('#enter-button').style.display = 'block';
+            document.querySelector('#back-button').style.display = 'block';
+            
+            let revealStart = Date.now();
+            let revealTimer = setInterval(function() {
+              // how much time passed from the start?
+                let timePassed = Date.now() - revealStart;
+
+                if (timePassed >= 500) {
+                    clearInterval(revealTimer); // finish the animation after 2 seconds
+                    return;
+                }
+
+                document.querySelector('#enter-button').style.opacity = timePassed / 500 + '';
+                document.querySelector('#back-button').style.opacity = timePassed / 500 + '';
+
+            }, 10);
+        }
+        
+        function showTransitionPage(url){
+            var target = url;
+            console.log('opening pARk page selected');
+            document.getElementById('transition-overlay').style.display = 'block';
+            
+            let transitionStart = Date.now();
+            let transitionTimer = setInterval(function(){
+                let timePassed = Date.now() - transitionStart;
+                
+                if(timePassed>=500){
+                    clearInterval(transitionTimer);
+                    window.location.href = './'+target;
+                    return;
+                }
+                
+            }, 10);    
+            
+            document.getElementById('transition-overlay').style.height = timePassed/500 + '%';
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+            for(var i=0; i<sessionManager.DOM.length; i++){
+                attachListeners(i);
+            }
+            
+            document.getElementById('enter-button').addEventListener('click', function(){
+                if(sessionManager.inPreview!=null){
+                    if(sessionManager.inPreview==0){
+                        showTransitionPage('acornpark');
+                    }
+                    else if(sessionManager.inPreview==1){
+                        showTransitionPage('princes');
+                    }
+                    else if(sessionManager.inPreview==2){
+                        showTransitionPage('pool');
+                    }
+                }
+            });
+            
+            document.getElementById('back-button').addEventListener('click', function(){
+                hideMainActionButtons();
+                let resetBegin = Date.now();
+
+                let timer = setInterval(function() {
+                  // how much time passed from the start?
+                    let timePassed = Date.now() - resetBegin;
+
+                    if (timePassed >= 500) {
+                        clearInterval(timer); // finish the animation after 2 seconds
+                        return;
+                    }
+                    
+                    resetSelectors(timePassed);
+
+                }, 10);
+
+                // as timePassed goes from 0 to 2000
+                // left gets values from 0px to 400px
+                function resetSelectors(timePassed) {
+                    
+                    sessionManager.DOM[0].style.height = 33+(67*(500-timePassed) / 500) + '%';
+                    sessionManager.DOM[0].style.opacity = timePassed / 500 + '';
+                    
+                    sessionManager.DOM[1].style.height = 33+(33*(timePassed-500) / 500) + '%';
+                    sessionManager.DOM[1].style.opacity = timePassed / 500 + '';
+                    
+                    sessionManager.DOM[2].style.height = 33+(33*(timePassed-500) / 500) + '%';
+                    sessionManager.DOM[2].style.opacity = timePassed / 500 + '';
+                }
+            });
+            
+            document.getElementById('acornpark-selector').addEventListener('click', function(){
+                //var self = this;
+                sessionManager.inPreview = 0;// 'acornpark';
+                let start = Date.now();
+
+                let timer = setInterval(function() {
+                  // how much time passed from the start?
+                    let timePassed = Date.now() - start;
+
+                    if (timePassed >= 500) {
+                        clearInterval(timer); // finish the animation after 2 seconds
+                        hide([1,2]);
+                        revealMainActionButtons();
+                        return;
+                    }
+                    
+                    draw(timePassed, 0);
+
+                }, 10);
+
+                // as timePassed goes from 0 to 2000
+                // left gets values from 0px to 400px
+                function draw(timePassed, item) {
+                    sessionManager.DOM[item].style.height = timePassed / 5 + '%';
+                    
+                    sessionManager.DOM[1].style.height = 3*(500-timePassed) / 10 + 'px';
+                    sessionManager.DOM[1].style.opacity = (500-timePassed) / 10 + '%';
+                    
+                    sessionManager.DOM[2].style.height = 3*(500-timePassed) / 10 + 'px';
+                    sessionManager.DOM[2].style.opacity = (500-timePassed) / 10 + '%';
+                }
+            });
+            
+            document.getElementById('park-des-princes-selector').addEventListener('click', function(){
+                //var self = this;
+                sessionManager.inPreview = 1; //'parkdesprinces';
+                let start = Date.now();
+
+                let timer = setInterval(function() {
+                  // how much time passed from the start?
+                    let timePassed = Date.now() - start;
+
+                    if (timePassed >= 500) {
+                        clearInterval(timer); // finish the animation after 2 seconds
+                        hide([0,2]);
+                        revealMainActionButtons();
+                        return;
+                    }
+                    
+                    draw(timePassed, 1);
+
+                }, 10);
+
+                // as timePassed goes from 0 to 2000
+                // left gets values from 0px to 400px
+                function draw(timePassed, item) {
+                    sessionManager.DOM[item].style.height = timePassed / 5 + '%';
+                    
+                    sessionManager.DOM[0].style.height = 3*(500-timePassed) / 10 + 'px';
+                    sessionManager.DOM[0].style.opacity = timePassed / 500 + '';
+                    
+                    sessionManager.DOM[2].style.height = 3*(500-timePassed) / 10 + 'px';
+                    sessionManager.DOM[2].style.opacity = timePassed / 500 + '';
+                }
+            });
+            
+            document.getElementById('park-du-pool-selector').addEventListener('click', function(){
+                //var self = this;
+                sessionManager.inPreview = 2; //'parkdupool';
+                let start = Date.now();
+
+                let timer = setInterval(function() {
+                  // how much time passed from the start?
+                    let timePassed = Date.now() - start;
+
+                    if (timePassed >= 500) {
+                        clearInterval(timer); // finish the animation after 2 seconds
+                        hide([0,1]);
+                        revealMainActionButtons();
+                        return;
+                    }
+                    
+                    draw(timePassed, 2);
+
+                }, 10);
+
+                // as timePassed goes from 0 to 2000
+                // left gets values from 0px to 400px
+                function draw(timePassed, item) {
+                    sessionManager.DOM[item].style.height = timePassed / 5 + '%';
+                    
+                    sessionManager.DOM[0].style.height = 3*(500-timePassed) / 10 + 'px';
+                    sessionManager.DOM[0].style.opacity = timePassed / 500 + '';
+                    
+                    sessionManager.DOM[1].style.height = 3*(500-timePassed) / 10 + 'px';
+                    sessionManager.DOM[1].style.opacity = timePassed / 500 + '';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id='main-app-container'>
+        <div id='header'>
+            <div id='view-all-selectors' class='view-option'>all</div>
+            <div id='view-selectors-by-region' class='view-option'>by region</div>
+        </div>
+        <div id='main-body'>
+            <div id='enter-button' class='main-action-button'>
+                enter
+            </div>
+            <div id='back-button' class='main-action-button'>
+                back
+            </div>
+            <div id='acornpark-selector' class='selector'>
+                ACORN pARk
+            </div>
+            <div id='park-des-princes-selector' class='selector'>
+                pARk DES PRINCES
+            </div>
+            <div id='park-du-pool-selector' class='selector'>
+                pARk DU POOL
+            </div>
+            
+            <div id='globe-selector' class='region-selector'>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

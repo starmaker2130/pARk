@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+    <title>XR Environment draft</title>
+    <link rel='stylesheet' type='text/css' href='../css/coreUI.css' />
+    <script src='../js/coreUX.js'></script>
+    <script src='../js/XREnvironment.js'></script>
+    <script src='../js/aframe.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            
+            coreUX.buildLedger('sample-universe-app-container');
+            
+            var myUniverse = new XREnvironment(10, 10, 10);
+            
+            coreUX.loadExperience(myUniverse);
+            
+        });
+    </script>
+</head>
+<body>
+    <div class='main-app-container'>
+    </div>
+</body>
+</html>

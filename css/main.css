@@ -1,0 +1,187 @@
+* {
+    font-family: 'Proxima Nova', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body, html{
+    width: 100%;
+    height: 100%;
+}
+
+#acornpark-selector, #united-states-region-selector{
+    background-color: rgba(255, 0, 0, 0.6);
+    color: white;
+}
+
+#park-des-princes-selector, #france-region-selector{
+    background-color: rgba(120, 255, 120, 0.6);
+    color: black;
+}
+
+#park-du-pool-selector, #congo-region-selector{
+    background-color: rgba(0, 0, 255, 0.6);
+    color: white;
+}
+
+#acornpark-selector:hover, #united-states-region-selector:hover{
+    background-color: rgba(255, 0, 0, 1.0);
+    color: white;
+}
+
+#park-des-princes-selector:hover, #france-region-selector:hover{
+    background-color: rgba(120, 255, 120, 1.0);
+    color: black;
+}
+
+#park-du-pool-selector:hover, #congo-region-selector:hover{
+    background-color: rgba(0, 0, 255, 1.0);
+    color: white;
+}
+
+@media only screen and (min-width: 760px){
+    #main-app-container{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -265px 0 0 -170px;
+        width: 340px;
+        height: 530px;
+    }
+
+    #header{
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 0;
+    }
+
+    #view-all-selectors{
+        border-radius: 10px 0 0 0;
+    }
+
+    .view-option{
+        width: 50%;
+        height: 100%;
+        display: inline-block;
+        font-size: 20px;
+        text-transform: lowercase;
+        background-color: black;
+        color: white;
+        cursor: pointer;
+    }
+
+    .view-option:hover{
+        text-transform: uppercase;
+        background-color: white;
+        color: black;
+    }
+
+    #view-selectors-by-region{
+        border-radius: 0 10px 0 0;
+    }
+
+    #main-body{
+        height: 450px;
+    }
+    
+    .region-selector, .selector{
+        cursor: pointer;
+        width: 100%;
+        height: 150px;
+        line-height: 75px;
+        text-align: center;
+        font-size: 20px;
+        /*text-transform: uppercase;*/
+    }
+    
+    .region-selector{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 760px){
+    #main-app-container{
+        width: 100%;
+        height: 100%;
+    }
+
+    #header{
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 0;
+    }
+
+    #view-all-selectors{
+
+    }
+
+    .view-option{
+        width: 50%;
+        height: 100%;
+        display: inline-block;
+        font-size: 20px;
+        text-transform: lowercase;
+        background-color: black;
+        color: white;
+        cursor: pointer;
+    }
+
+    .view-option:hover{
+        text-transform: uppercase;
+        background-color: white;
+        color: black;
+    }
+
+    #view-selectors-by-region{
+
+    }
+
+    #main-body{
+        height: 600px;
+    }
+
+    .region-selector, .selector{
+        cursor: pointer;
+        width: 100%;
+        height: 200px;
+        line-height: 95px;
+        text-align: center;
+        font-size: 20px;
+        /*text-transform: uppercase;*/
+    }
+    
+    .region-selector{
+        display: none;
+    }
+}
+
+#enter-button{
+    bottom: 35%;
+}
+
+#back-button{
+    bottom: 10%;
+}
+
+.main-action-button{
+    left: 50%;
+    margin-left: -37px;
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    display: none;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: 3px white solid;
+    color: white;
+    text-align: center;
+    line-height: 75px;
+    text-transform: lowercase;
+    font-size: 16px;
+    z-index: 100;
+}
