@@ -106,6 +106,9 @@ var coreUX = {
                 
                 loadingBar.style.opacity = '0';
                 layer.style.height = '0';
+                
+                //document.querySelector('.song-meta-data-panel-animation-0').emit('launchPlayers');
+                
                 clearInterval(openingTimer);
                 return;
             }

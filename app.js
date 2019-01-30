@@ -1,3 +1,15 @@
+/*
+*   author: Patrice-Morgan Ongoly (@starmaker2130)
+*   last modified: tuesday, january 29, 2019 0844 utc-5
+*   version: 0.0.2
+*   title: public Augmented Reality kinectome
+*
+*   
+*
+*
+*
+*/
+
 "use strict";
 
 var bodyParser = require('body-parser');
@@ -50,6 +62,21 @@ app.instance.get('/css/:stylesheet_id', function(req, res){
 app.instance.get('/js/:script_id', function(req, res){
     let scriptId = req.params.script_id;
     res.sendFile(scriptId, {root: app.config.DIRECTORY[2]});
+});
+
+app.instance.get('/media/audio/:audio_id', function(req, res){
+    let audioId = req.params.audio_id;
+    res.sendFile(audioId, {root: app.config.DIRECTORY[3]});
+});
+
+app.instance.get('/media/icon/:icon_id', function(req, res){
+    let iconId = req.params.icon_id;
+    res.sendFile(iconId, {root: app.config.DIRECTORY[4]});
+});
+
+app.instance.get('/media/img/:img_id', function(req, res){
+    let imgId = req.params.img_id;
+    res.sendFile(imgId, {root: app.config.DIRECTORY[5]});
 });
 
 app.instance.get('/media/texture/:texture_id', function(req, res){
