@@ -4,6 +4,19 @@ var coreUX = {
         videoContainer.setAttribute('id', 'videoElement');
         videoContainer.setAttribute('autoplay', true);
         
+        
+        let audioSource = document.createElement('source');
+        audioSource.setAttribute('id', 'static-selector');
+        audioSource.setAttribute('src', '');
+        audioSource.setAttribute('type', 'audio/mpeg');
+        
+        let audioContainer = document.createElement('audio');
+        audioContainer.setAttribute('id', 'html5-audio-player');
+        audioContainer.setAttribute('controls', true);
+        audioContainer.setAttribute('autoplay', false);
+        
+        audioContainer.appendChild(audioSource);
+        
         let mainContainer = document.querySelector('.main-app-container');
         mainContainer.setAttribute('id', name);
         
@@ -43,6 +56,7 @@ var coreUX = {
         mainContainer.appendChild(entryLayerInstructions);
         mainContainer.appendChild(embeddedSceneContainer);
         mainContainer.appendChild(videoContainer);
+        mainContainer.appendChild(audioContainer);
         
         if (navigator.mediaDevices.getUserMedia) {       
             let video = document.querySelector("#videoElement");
@@ -102,6 +116,9 @@ var coreUX = {
 
             if(timeElapsed>=500){
                 
+                //removed in current version
+                //the environment has an internal pointer to all modules and launches the modules that are attached to it to better compose that functionality
+                
                 self.launchModules([modules]);
                 
                 loadingBar.style.opacity = '0';
@@ -123,6 +140,7 @@ var coreUX = {
         //console.log(modules);
         if(modules!=null){
             for(var i = 0 ; i< modules.length; i++){
+                console.log(`launching active dependencies for module type: ${modules[i].type}`);
                 modules[i].stream();//application.core.stream();
             }
         }

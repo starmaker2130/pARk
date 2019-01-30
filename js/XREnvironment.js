@@ -16,19 +16,23 @@ function XREnvironment(height, width, length, time){
         var objType = childObject.type;
         
         if(self.application.renderer.dictionary[objType]!=undefined){
-            self.application.renderer.dictionary[objType](childObject);
+           // self.application.renderer.dictionary[objType](childObject);
+            console.log(`rendering component type ${objType} in environment space...`);
+            childObject.application.renderer.dictionary[objType](self);
         }
         else{
             console.log('unregistered component model added to environment.');
         }
         
         //self.pointers.elements.push(``)
-        return self.application.core.childList.length;
+        return Object.keys(self.application.core.childList).length;
     }
     
-    this.stream = function(){
-        console.log('no dynamic dependencies attached.')
-        console.log('static experience rendered.');
+    this.stream = function(dataType, dataName, dataTarget){
+        var type = dataType || null;
+        var targetName = dataName || null;
+        var target = dataTarget || null;
+        self.application.core.stream(type, targetName, target);
     }
     
     this.application =  {
@@ -42,9 +46,9 @@ function XREnvironment(height, width, length, time){
             dictionary: {
                 'xraudio': function(renderView){
                     if(renderView!=null){
-                        self.application.core.childList.push(renderView);
+                        self.application.core.childList[renderView.identity] = renderView;
                         
-                        console.log('attaching xraudio component to environment.')
+                        console.log('attaching xraudio component to environment.');
                         
                         console.log('loading asset dependencies into experience asset container...');
                         
@@ -530,6 +534,14 @@ function XREnvironment(height, width, length, time){
                     else{
                         console.log('execute handler for xrhumanbody object');
                     }
+                },
+                'xrautomobile': function(renderView){
+                    if(renderView){
+                        
+                    }
+                    else{
+                        console.log('execute handler for xrautomobile object');
+                    }
                 }
             },
             createPointer: function(target){
@@ -544,7 +556,11 @@ function XREnvironment(height, width, length, time){
                 renderHistory: 0,
                 experienceContainer: null,
                 assetsContainer: null,
-                elements: []
+                elements: [],
+                stream: {
+                    audio: null,
+                    video: null
+                }
             },
             buildXRComponent: function(element, target){
                 var key = element;
@@ -680,8 +696,42 @@ function XREnvironment(height, width, length, time){
                     children: []
                 }
             ],
-            stream: function(){
-                console.log('streaming xr environment core.');
+            stream: function(type, name, src){
+                if(type!=null){
+                    if(type=='audio'){
+                        if(self.application.core.pointers.stream.audio==null){
+                            self.application.core.pointers.stream.audio = [];
+                        }
+                        console.log(`stream track ${src}`);
+                        
+                        self.application.core.pointers.stream.audio.push({
+                            name: name,
+                            track: src
+                        });
+                    }
+                    else if(type=='video'){
+                        if(self.application.core.pointers.stream.video==null){
+                            self.application.core.pointers.stream.video = [];
+                        }
+                        
+                        console.log(`stream video ${src}`);
+                        
+                        self.application.core.pointers.stream.video.push({
+                            video: src
+                        });
+                    }
+                }
+                else{
+                    if(self.application.core.pointers.stream.audio != null){
+                        var audioStream = self.application.core.pointers.stream.audio[0].name;
+                        self.application.core.childList[audioStream].stream();
+                    }
+
+                    if(self.application.core.pointers.stream.video != null){
+                        var videoStream = self.application.core.pointers.stream.video[0].name;
+                        self.application.core.childList[videoStream].stream();
+                    }
+                }
             },
             render : function(){
                 //var self = this;
@@ -744,10 +794,9 @@ function XREnvironment(height, width, length, time){
                         }
                     });
                     core.pointers.renderHistory++;
-                }
-                
+                }                
             },
-            childList: []
+            childList: {}
         }
     };
 }
