@@ -29,7 +29,8 @@ var app = {
             './media/img',      //5
             './media/pattern',  //6
             './media/texture',  //7
-            './media/video'     //8
+            './media/video',     //8
+            './media/model'     //9
         ]
     }
 };
@@ -52,6 +53,22 @@ app.instance.get('/', function(req, res){
 
 app.instance.get('/universe', function(req, res){
     res.render('universe.html', {root: app.config.DIRECTORY[0]});
+});
+
+app.instance.get('/gencoll', function(req, res){
+    res.render('gcollection.html', {root: app.config.DIRECTORY[0]});
+});
+
+app.instance.get('/xraudio', function(req, res){
+    res.render('xrtest.html', {root: app.config.DIRECTORY[0]});
+});
+
+app.instance.get('/xrbody', function(req, res){
+    res.render('xrbody.html', {root: app.config.DIRECTORY[0]});
+});
+
+app.instance.get('/xrbody2', function(req, res){
+    res.render('body2.html', {root: app.config.DIRECTORY[0]});
 });
 
 app.instance.get('/css/:stylesheet_id', function(req, res){
@@ -87,6 +104,11 @@ app.instance.get('/media/texture/:texture_id', function(req, res){
 app.instance.get('/media/video/:video_id', function(req, res){
     let videoId = req.params.video_id;
     res.sendFile(videoId, {root: app.config.DIRECTORY[8]});
+});
+
+app.instance.get('/media/model/:model_id', function(req, res){
+    let modelId = req.params.model_id;
+    res.sendFile(modelId, {root: app.config.DIRECTORY[9]});
 });
 
 app.instance.listen(app.config.PORT, function(){

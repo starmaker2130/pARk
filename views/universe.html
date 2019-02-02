@@ -13,27 +13,27 @@
             
             coreUX.buildLedger('sample-universe-app-container');
             
-            var myUniverse = new XREnvironment(15, 20, 10);
+            var myUniverse = new XREnvironment(10, 10, 10);
             
-            var myPlaylist = new XRAudioPlayer('sample');
+            var myPlaylist = new XRAudioPlayer('playlist1');
             
             var collection = {
                 'song 1': {
-                    coverURL: '../media/img/Blonde.png',
-                    audioURL: '../media/audio/Nights.mp3',
-                    metadata: {
-                        title: 'Nights',
-                        author: 'Frank Ocean',
-                        year: 2016
-                    }
-                },
-                'song 2': {
                     coverURL: '../media/img/OracularSpectacular.png',
                     audioURL: '../media/audio/TheYouth.mp3',
                     metadata: {
                         title: 'The Youth',
                         author: 'MGMT',
                         year: 2007
+                    }
+                },
+                'song 2': {
+                    coverURL: '../media/img/Blonde.png',
+                    audioURL: '../media/audio/Nights.mp3',
+                    metadata: {
+                        title: 'Nights',
+                        author: 'Frank Ocean',
+                        year: 2016
                     }
                 },
                 'song 3': {

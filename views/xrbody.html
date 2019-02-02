@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+    <title>new xrhumanbody test</title>
+    <link rel='stylesheet' type='text/css' href='../css/coreUI.css' />
+    <style>
+    
+        .option-button{
+            position: relative;
+            display: block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 90%;
+            margin: 2% auto;
+        }
+        
+        #option-container{
+            position: absolute;
+            right: 5%;
+            width: 100px;
+            height: 300px;
+            z-index: 10;
+        }
+    </style>
+    <script src='../js/coreUX.js'></script>
+    <script src='../js/XRAudioPlayer.js'></script>
+    <script src='../js/aframe.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            if (navigator.mediaDevices.getUserMedia) {       
+                let video = document.querySelector("#videoElement");
+                navigator.mediaDevices.getUserMedia({video: true}).then(function(stream) {
+                    video.srcObject = stream;
+                }).catch(function(error) {
+                    console.log("Something went wrong!");
+              });
+            }
+            
+            document.getElementById('option-0').addEventListener('click', function(){
+                document.getElementById('main-model').setAttribute('obj-model',"obj: #obj-model; mtl: #obj-mtl");
+            });
+            
+            document.getElementById('option-1').addEventListener('click', function(){
+                document.getElementById('main-model').setAttribute('obj-model',"obj: #bil-obj-model; mtl: #bil-obj-mtl");
+            });
+            
+            document.getElementById('option-2').addEventListener('click', function(){
+                document.getElementById('main-model').setAttribute('obj-model',"obj: #plaid-obj-model; mtl: #plaid-obj-mtl");
+            });
+            
+            document.getElementById('option-3').addEventListener('click', function(){
+                document.getElementById('main-model').setAttribute('obj-model',"obj: #exeter-obj-model; mtl: #exeter-obj-mtl");
+            });
+        
+        });
+    </script>
+</head>
+<body>
+    <div class='main-app-container'>
+        <div id='option-container'>
+            <input type='button' value='model' id='option-0' class='option-button' />
+            <input type='button' value='bil' id='option-1' class='option-button' />
+            <input type='button' value='plaid' id='option-2' class='option-button' />
+            <input type='button' value='exeter' id='option-3' class='option-button' />
+        </div>
+        <a-scene embedded class='embedded-assets-container' timeout='15000'>
+            <a-assets>
+                <a-asset-item id="obj-model" src="../media/model/model.obj" preload='true'></a-asset-item>
+                <a-asset-item id="obj-mtl" src="../media/model/model.mtl" preload='true'></a-asset-item>
+                
+                <a-asset-item id="bil-obj-model" src="../media/model/bilcouturetop.obj" preload='true'></a-asset-item>
+                <a-asset-item id="bil-obj-mtl" src="../media/model/bilcouturetop.mtl" preload='true'></a-asset-item>
+                
+                <a-asset-item id="plaid-obj-model" src="../media/model/plaid.obj" preload='true'></a-asset-item>
+                <a-asset-item id="plaid-obj-mtl" src="../media/model/plaid.mtl" preload='true'></a-asset-item>
+                
+                <a-asset-item id="exeter-obj-model" src="../media/model/plaidexeter.obj" preload='true'></a-asset-item>
+                <a-asset-item id="exeter-obj-mtl" src="../media/model/plaidexeter.mtl" preload='true'></a-asset-item>
+            </a-assets>
+            
+            <a-entity id='main-model' obj-model="obj: #obj-model; mtl: #obj-mtl" rotation='-90 0 0' position='0 1 0' scale='0.1 0.1 0.1'>
+                <a-animation attribute="rotation"
+                    dur="20000"
+                    easing="linear"
+                    fill="forwards"
+                    to="-90 360 0"
+                    repeat="indefinite">
+                </a-animation>
+                <a-animation attribute="scale"
+                             delay='3500'
+                             dur="2500"
+                             easing="linear"
+                             fill="forwards"
+                             to="3 3 3">
+                </a-animation>
+            </a-entity>
+            <a-entity position='0 0 4' rotation='0 0 0'>
+                <a-camera id='main-user-camera' userHeight = '1.8' look-controls wasd-controls></a-camera>
+            </a-entity>
+        </a-scene>
+        <video id='videoElement' autoplay></video>
+    </div>
+</body>
+</html>

@@ -1,5 +1,5 @@
-var coreUX = {
-    buildLedger: function(name){
+function Ledger(){
+    this.buildLedger = function(name){
         let videoContainer = document.createElement('video');
         videoContainer.setAttribute('id', 'videoElement');
         videoContainer.setAttribute('autoplay', true);
@@ -69,8 +69,9 @@ var coreUX = {
         
         // TODO add blockchain code here
         
-    },
-    loadExperience: function(modules){  //loads the experience markup, dynamic content objects are present but not "active" to preserve memory
+    }
+    
+    this.loadExperience = function(modules){  //loads the experience markup, dynamic content objects are present but not "active" to preserve memory
         //console.log(modules);
         const self = this;
         var loader = document.querySelector('.loading-bar');
@@ -103,8 +104,9 @@ var coreUX = {
         }, 10);
 
         console.log('loading application experience...');
-    },
-    launchApplication: function(target, packages){ // dynamic content and associated modules are activated as the user is now viewing the experience
+    }
+    
+    this.launchApplication = function(target, packages){ // dynamic content and associated modules are activated as the user is now viewing the experience
         var modules = packages;
         var self = this;
         let layer = target;
@@ -135,8 +137,9 @@ var coreUX = {
         }, 10);
 
         console.log('opening application...');
-    },
-    launchModules: function(modules){
+    }
+    
+    this.launchModules = function(modules){
         //console.log(modules);
         if(modules!=null){
             for(var i = 0 ; i< modules.length; i++){
@@ -144,8 +147,9 @@ var coreUX = {
                 modules[i].stream();//application.core.stream();
             }
         }
-    },
-    loadModules: function(modules){
+    }
+    
+    this.loadModules = function(modules){
         if(modules!=null){
             for(var i = 0 ; i<modules.length; i++){
                 console.log(`loading module type: ${modules[i].type}`);
@@ -153,4 +157,4 @@ var coreUX = {
             }
         }
     }
-};
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+    <title>new xraudioplayer test</title>
+    <link rel='stylesheet' type='text/css' href='../css/coreUI.css' />
+    <script src='../js/coreUX.js'></script>
+    <script src='../js/XRAudioPlayer.js'></script>
+    <script src='../js/aframe.min.js'></script>
+    <script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var dApp = new Ledger();
+            dApp.buildLedger('xraudio-app-container');
+                        
+            var myPlaylist = new XRAudioPlayer('playlist1');
+            
+            var collection = {
+                'song 1': {
+                    coverURL: '../media/img/OracularSpectacular.png',
+                    audioURL: '../media/audio/TheYouth.mp3',
+                    metadata: {
+                        title: 'The Youth',
+                        author: 'MGMT',
+                        year: 2007
+                    }
+                },
+                'song 2': {
+                    coverURL: '../media/img/Blonde.png',
+                    audioURL: '../media/audio/Nights.mp3',
+                    metadata: {
+                        title: 'Nights',
+                        author: 'Frank Ocean',
+                        year: 2016
+                    }
+                },
+                'song 3': {
+                    coverURL: '../media/img/Yesterday.png',
+                    audioURL: '../media/audio/Yesterday.mp3',
+                    metadata: {
+                        title: 'Yesterday',
+                        author: 'Noname',
+                        year: 2016
+                    }
+                },
+            };
+
+            myPlaylist.addFromList(collection);
+            
+            myPlaylist.build();
+            
+            dApp.loadExperience(myPlaylist);
+        });
+    </script>
+</head>
+<body>
+    <div class='main-app-container'>
+    </div>
+</body>
+</html>
