@@ -10,6 +10,7 @@
     <script src='../js/XRHumanBody.js'></script>
     <script src='../js/XREnvironment.js'></script>
     <script src='../js/aframe.min.js'></script>
+    <script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function(){
             /*
@@ -21,7 +22,7 @@
             
             var HouseOfVenus = new TreeHouse();
             
-            HouseOfVenus.buildLedger('4467 Technology Drive', {video: false, audio: false, frame: 'dynamic'});
+            HouseOfVenus.buildLedger('4467 Technology Drive', {video: true, audio: false, frame: 'dynamic'});
             
             
             /*
@@ -37,7 +38,7 @@
             *   content-addressable experiences and procedures.
             */
             
-            var myOffice = new XREnvironment(10, 10, 10); // smart conrtact for a hyperreality space, the space is being used for business purposes hence the name "myXROffice"
+            var myOffice = new XREnvironment(10, 10, 10); // smart conrtact for a hyperreality space, the space is being used for business purposes hence the name "myOffice"
             
             var myModel = new XRHumanBody('Patrice-Morgan', 1.85, 75.2); //
             var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);
@@ -78,13 +79,13 @@
             
             myModel.addLayer(myOutfit);
             
-            myOffice.add(myModel);
+            myOffice.add(myModel, '1 2 2');
             myOffice.add(myPlaylist);
             
             
             /*
             *   -----------------------------------------------------------------------------------------------------------
-            *                                      LOAD CONTRACT ONTO HOUSE LEDGER
+            *                                  SIGNATURE - LOAD CONTRACT ONTO HOUSE LEDGER
             *   -----------------------------------------------------------------------------------------------------------
             *
             */

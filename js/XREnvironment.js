@@ -24,13 +24,14 @@ function XREnvironment(height, width, length, time){
         self.application.core.render();
     }
     
-    this.add = function(childObject){
+    this.add = function(childObject, position){
         var objType = childObject.type;
+        var location = position || null;
         
         if(self.application.renderer.dictionary[objType]!=undefined){
            // self.application.renderer.dictionary[objType](childObject);
             console.log(`rendering component type ${objType} in environment space...`);
-            childObject.application.renderer.dictionary[objType](self);
+            childObject.application.renderer.dictionary[objType](self, location);
         }
         else{
             console.log('unregistered component model added to environment.');

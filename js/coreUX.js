@@ -70,7 +70,7 @@ function TreeHouse(){
             self.startEyeStream();
         }        
               
-        if(sensor.frame=='dynamic'){
+        if(sensors.frame=='dynamic'){
             // core UI funcitons available in the TreeHouse specification
             self.ui.checkWindowDimensions();
             self.ui.setFocus(0);

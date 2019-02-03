@@ -82,10 +82,11 @@ function XRHumanBody(name, height, weight, tailorMeasurements){
                     'flat'
                 ],
                 dictionary: {
-                    'xrhumanbody': function(environment){
+                    'xrhumanbody': function(environment, location){
                         var renderView = self;
                         var componentArray = [];
                         var layerComponent;
+                        var objectLocation = location || null;
 
                         if(renderView!=null&&environment!=null){
                             environment.application.core.childList[self.identity] = renderView;
@@ -118,6 +119,10 @@ function XRHumanBody(name, height, weight, tailorMeasurements){
                                             }
                                         };
                                         
+                                        if(objectLocation==null){
+                                            objectLocation = '0 1 0';
+                                        }
+                                        
                                         layerComponent = {
                                             name: `#${layer.name}-obj-model`,
                                             order: 0,
@@ -125,7 +130,7 @@ function XRHumanBody(name, height, weight, tailorMeasurements){
                                             src: `#${layer.name}-obj`,
                                             mtl: `#${layer.name}-mtl`,
                                             rotation: '-90 0 0',
-                                            position: '0 1 0'
+                                            position: objectLocation
                                         };
                                        
                                         componentArray.push(layerComponent);
