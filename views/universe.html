@@ -2,19 +2,46 @@
 <html>
 <head>
     <meta name='viewport' content='width=device-width,initial-scale=1.0' />
-    <title>XR Environment draft</title>
+    <title>House of Venus, Benefit Corporation | Public Augmented Reality Kinectome v. 0.2.0 | Shell</title>
     <link rel='stylesheet' type='text/css' href='../css/coreUI.css' />
     <script src='../js/coreUX.js'></script>
     <script src='../js/XRAudioPlayer.js'></script>
+    <script src='../js/XRBodyLayer.js'></script>
+    <script src='../js/XRHumanBody.js'></script>
     <script src='../js/XREnvironment.js'></script>
     <script src='../js/aframe.min.js'></script>
     <script>
         document.addEventListener('DOMContentLoaded', function(){
+            /*
+            *   -----------------------------------------------------------------------------------------------------------
+            *                                               LEDGERSPACE
+            *   -----------------------------------------------------------------------------------------------------------
+            *
+            */
             
-            coreUX.buildLedger('sample-universe-app-container');
+            var HouseOfVenus = new TreeHouse();
             
-            var myUniverse = new XREnvironment(10, 10, 10);
+            HouseOfVenus.buildLedger('4467 Technology Drive', {video: false, audio: false, frame: 'dynamic'});
             
+            
+            /*
+            *   -----------------------------------------------------------------------------------------------------------
+            *                                                  TERMS
+            *   -----------------------------------------------------------------------------------------------------------
+            *
+            *   Below this point are the contract "terms" this contains the business logic or source code of an application
+            *   or process. After this mid section the components are added to the contract which is processed by the 
+            *   pARk DLT. The pARk generates the experience, i.e. the XREnvironment, based on the configuration of the 
+            *   ledgerspace it has been alotted by the global pARk/local neighborhood and the terms defined in the contract.
+            *   Usage rights and compensation are managed automatically through this decenrtalized process, allowing for 
+            *   content-addressable experiences and procedures.
+            */
+            
+            var myOffice = new XREnvironment(10, 10, 10); // smart conrtact for a hyperreality space, the space is being used for business purposes hence the name "myXROffice"
+            
+            var myModel = new XRHumanBody('Patrice-Morgan', 1.85, 75.2); //
+            var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);
+
             var myPlaylist = new XRAudioPlayer('playlist1');
             
             var collection = {
@@ -47,12 +74,23 @@
                 },
             };
 
-            myPlaylist.addFromList(collection);
+            myPlaylist.addFromList(collection);            
             
-            myUniverse.add(myPlaylist);
+            myModel.addLayer(myOutfit);
             
-            coreUX.loadExperience(myUniverse);
+            myOffice.add(myModel);
+            myOffice.add(myPlaylist);
             
+            
+            /*
+            *   -----------------------------------------------------------------------------------------------------------
+            *                                      LOAD CONTRACT ONTO HOUSE LEDGER
+            *   -----------------------------------------------------------------------------------------------------------
+            *
+            */
+            
+            HouseOfVenus.loadExperience(myOffice);
+             
         });
     </script>
 </head>

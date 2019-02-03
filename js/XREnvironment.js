@@ -1,3 +1,15 @@
+/*
+*   XR ENVIRONMENT | HOUSE OF VENUS PUBLIC AUGMENTED REALITY KINECTOME
+*   
+*   author: Patrice-Morgan Ongoly | @starmaker2130 | @ceo.hov
+*   title: XR Environment
+*   version: 0.19.0
+*   last modified: Sunday, February 3, 2019 10:09:13 UTC-05:00:00
+*   description: base immersive reality experience class that contains all the logic for immersive hyper reality 
+*       applications as described in the pARk specification v. 0.2.0
+*
+*/ 
+
 function XREnvironment(height, width, length, time){
     var self = this;
     
@@ -67,8 +79,7 @@ function XREnvironment(height, width, length, time){
                             order: 0,
                             elementType: 'xraudio',
                             build: {
-                                raw: `
-                        <a-entity geometry="primitive: plane; width: 2; height: 2;" rotation='0 -180 180' material='side: double; color: red;' position='0  1 -1.5'>
+                                raw: `<a-entity geometry="primitive: plane; width: 2; height: 2;" rotation='0 -180 180' material='side: double; color: red;' position='0  1 -1.5'>
                             <a-animation attribute="rotation"
                                          delay='3500'
                                          dur="2000"
@@ -156,8 +167,7 @@ function XREnvironment(height, width, length, time){
                                          easing="linear"
                                          fill="forwards"
                                          to="0.5">
-                            </a-animation>
-                            <a-entity geometry='primitive: plane; width: 2; height: 2;' position='-1.5 0 0.1' material='side: double; color: black; opacity: 0'  text='align: center; value: House of Venus\n\n (c) 2018; color: white; width: 5; font: https://cdn.aframe.io/fonts/mozillavr.fnt'>
+                            </a-animation>                            <a-entity geometry='primitive: plane; width: 2; height: 2;' position='-1.5 0 0.1' material='side: double; color: black; opacity: 0'  text='align: center; value: House of Venus\n\n (c) 2018; color: white; width: 5; font: https://cdn.aframe.io/fonts/mozillavr.fnt'>
                                 <a-animation attribute="material.opacity"
                                          delay="3500"
                                          dur='2500'
@@ -598,6 +608,12 @@ function XREnvironment(height, width, length, time){
                         componentPointer.setAttribute('font', key.font);
                         componentPointer.setAttribute('align', key.align);
                     }
+                    else if(key.elementType=='a-obj-model'){
+                        componentPointer.setAttribute('position', key.position);
+                        componentPointer.setAttribute('rotation', key.rotation);
+                        componentPointer.setAttribute('src', key.src);
+                        componentPointer.setAttribute('mtl', key.mtl);
+                    }
                     else{                    
                         componentPointer.setAttribute('geometry', key.geometry);
                         componentPointer.setAttribute('rotation', key.rotation);
@@ -611,7 +627,7 @@ function XREnvironment(height, width, length, time){
                     console.log(componentPointer);
                 if(key.children!=null&&key.children.length>0){
                     console.log('this component has children!');
-                    for(var child = 0; child <key.children.length; child++){
+                    for(var child = 0; child<key.children.length; child++){
                         self.application.core.attachFrameToDOM(key.children[child], key.name);
                     }
                 }
@@ -619,7 +635,7 @@ function XREnvironment(height, width, length, time){
             attachFrameToDOM: function(key, target){
                 //console.log(key.elementType);
                 //console.log(key);
-                if(key.elementType=='xraudio'){ // first order aframe component
+                if(key.elementType=='xraudio'||key.elementType=='xrhumanbody'){ // first order aframe component
                     console.log(key);
                     var XRComponents = new Array(key.build.components.length);
                     for(var k=0; k<XRComponents.length; k++){
@@ -767,7 +783,7 @@ function XREnvironment(height, width, length, time){
                         
                     }
                     
-                    for(var j=0; j<addOns.length; j++){
+                    for(var j=0; j<addOns.length; j++){// load assets into the assetcontainer from the build elements store
                         let childAddOn = addOns[j];
                         let addOnElement = document.createElement(childAddOn.elementType);
                         

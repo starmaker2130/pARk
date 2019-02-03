@@ -1,17 +1,26 @@
-function XRAudioPlayer(name, height, weight, tailorMeasurements){
+/*
+*   XR HUMAN BODY | HOUSE OF VENUS PUBLIC AUGMENTED REALITY KINECTOME
+*   
+*   author: Patrice-Morgan Ongoly | @starmaker2130 | @ceo.hov
+*   title: XR Human Body
+*   version: 0.1.0
+*   last modified: Sunday, February 3, 2019 11:06:13 UTC-05:00:00
+*   description: a frame for rendering human bodies in decentralized immersive applications with handlers for outfits 
+*       (XRBodyLayers) as described in the pARk specification v. 0.2.0
+*
+*/ 
+
+function XRHumanBody(name, height, weight, tailorMeasurements){
+    var self = this;
     if(name==null||height==null||weight==null){
         throw new Error('Cannot initialize this component without a name, height, or weight. XR Human Body spec. v. 0.0.1');
     }
     else{
-        var self = this;
-
         this.type ='xrhumanbody';
         this.socket = null;
         this.identity = name;
         this.height = height;
         this.weight = weight;
-        
-        console.log(`new xr componenet generated: \n ------------------ \n XRHumanBody v. 0.0.1 \n type: ${self.type} \n outgoing socket? ${(self.socket!=null)} \n objId: ${self.identity} \n height: ${self.height} \n weight: ${self.weight}\n ------------------`);
         
         this.spawn = function(){
             self.socket = io.connect(location.host);
@@ -35,6 +44,34 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
             self.application.core.stream();
         };
 
+        this.addLayer = function(data){
+            var core = self.application.core;
+            var coreMatrix = core.layers.matrix;
+            console.log('Added layer to core:');
+            console.log('------');
+            console.log(data);
+            console.log('------');
+            var layer = data;
+
+            if(data.type=='xrbodylayer'){
+                if(coreMatrix[0].length==coreMatrix[1].length&&coreMatrix[0].length==coreMatrix[2].length&&coreMatrix[0].length==coreMatrix[3].length&&coreMatrix[0].length==coreMatrix[4].length&&coreMatrix[0].length==0){
+                    console.log('first layer on body!');
+                }
+                else{
+                    console.log('secondary layer.');
+                }
+                for(var i=0;i<layer.matrix.length; i++){
+                    coreMatrix[i].push(layer.matrix[i]);
+                }
+            }
+            else{
+                throw new Error('Cannot add a non XRBodyLayer object as a layer to an XRHumanBody. If attempting to add a JSON formatted object wrap it as an XRBodyLayer then try again.');
+            }
+            
+            core.layers.matrix = coreMatrix;
+            return core.layers.matrix;
+        };
+        
         this.application = {
             focus: 0, // 0 = home; 1 = audio; 2 = visual; 3 = search
             renderer: {
@@ -47,6 +84,8 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
                 dictionary: {
                     'xrhumanbody': function(environment){
                         var renderView = self;
+                        var componentArray = [];
+                        var layerComponent;
 
                         if(renderView!=null&&environment!=null){
                             environment.application.core.childList[self.identity] = renderView;
@@ -54,478 +93,62 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
                             console.log('attaching xrhumanbody component to environment.')
 
                             console.log('loading asset dependencies into experience asset container...');
-
-                            for(var i=0; i<renderView.application.core.trackList.length; i++){
-                                let track = renderView.application.core.trackList[i];
-                                environment.application.renderer.buildElement.push({
-                                    name: `#${track.texture}`,
-                                    elementType: 'img',
-                                    src: `${track.cover}`,
-                                    preload: 'true'
-                                });
-
-                                console.log(`on track ${track.audio}`);
-
-                                environment.stream('audio', self.identity, track.audio);
+                            // load all of the layers associated with the current model
+                            for(var i=0; i<renderView.application.core.layers.matrix.length; i++){
+                                console.log(renderView.application.core.layers.matrix[i]);
+                                for(var j=0; j<renderView.application.core.layers.matrix[i].length; j++){
+                                    let layer = renderView.application.core.layers.matrix[i][j];
+                                    
+                                    if(layer.name!=null&&layer.name!=undefined){
+                                        console.log(`-----------------\n Added layer ${layer.name}.`);
+                                        console.log(layer.obj);
+                                        console.log(layer.mtl);
+                                        layerAssets = {
+                                            obj: {
+                                                name: `#${layer.name}-obj`,
+                                                elementType: 'a-asset-item',
+                                                src: `${layer.obj}`,
+                                                preload: 'true'
+                                            },
+                                            mtl: {
+                                                name: `#${layer.name}-mtl`,
+                                                elementType: 'a-asset-item',
+                                                src: `${layer.mtl}`,
+                                                preload: 'true'
+                                            }
+                                        };
+                                        
+                                        layerComponent = {
+                                            name: `#${layer.name}-obj-model`,
+                                            order: 0,
+                                            elementType: 'a-obj-model',
+                                            src: `#${layer.name}-obj`,
+                                            mtl: `#${layer.name}-mtl`,
+                                            rotation: '-90 0 0',
+                                            position: '0 1 0'
+                                        };
+                                       
+                                        componentArray.push(layerComponent);
+                                        
+                                        environment.application.renderer.buildElement.push(layerAssets.obj);
+                                        environment.application.renderer.buildElement.push(layerAssets.mtl);
+                                    }
+                                }
                             }
 
                             environment.application.core.experience.push({
-                                name: '.xraudioplayer',
+                                name: '.xrhumanbody',
                                 order: 0,
-                                elementType: 'xraudio',
+                                elementType: 'xrhumanbody',
                                 build: {
-                                    raw: `
-                            <a-entity geometry="primitive: plane; width: 2; height: 2;" rotation='0 -180 180' material='side: double; color: red;' position='0  1 -1.5'>
-                                <a-animation attribute="rotation"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="-110 -180 180">
-                                </a-animation>
-                                <a-animation attribute="position"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="0 0 -0.5">
-                                </a-animation>
-                                <a-text id='meta-data-container' rotation="0 0 0" position='0 0 0.5' align='center' value="this is where \n\n the song meta data will go \n\n against  a backdrop \n\n of the album cover" font='https://cdn.aframe.io/fonts/mozillavr.fnt'></a-text>
-                            </a-entity>
-
-                            <a-entity geometry="primitive: plane; width: 2; height: 2;" rotation='180 90 0' material='side: double; color: yellow;' position='1 1 -2.5'>
-                                <a-animation attribute="rotation"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="290 90 0">
-                                </a-animation>
-                                <a-animation attribute="position"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="2 0 -2.5">
-                                </a-animation>
-                                <a-text rotation="0 0 0" position='0 0 0.5' align='center' color='black' value="track list" font='https://cdn.aframe.io/fonts/mozillavr.fnt'></a-text>
-                            </a-entity>
-
-                            <a-entity geometry="primitive: plane; width: 2; height: 2;" rotation='0 90 180' material='side: double; color: blue;' position='-1 1 -2.5'>
-                                <a-animation attribute="rotation"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="-110 90 180">
-                                </a-animation>
-                                <a-animation attribute="position"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="-2 0 -2.5">
-                                </a-animation>
-                                <a-text rotation="0 0 0" position='0 0 0.5' align='center' value="edit" font='https://cdn.aframe.io/fonts/mozillavr.fnt'></a-text></a-entity>
-
-                            <a-entity class='panel-container' geometry="primitive: plane; width: 2; height: 2;" rotation='0 0 0' material='side: double; color: aquamarine;' position='0 1 -2.5'>
-                                <a-animation attribute="rotation"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="-110 0 0">
-                                </a-animation>
-                                <a-animation attribute="position"
-                                             delay='3500'
-                                             dur="2000"
-                                             fill="forwards"
-                                             to="0 0 -4.5">
-                                </a-animation>
-                            </a-entity>
-
-                            <a-entity class='title-container' geometry='primitive: plane; width: 3; height: 0.75;' position='0 4 -2' material='side: double; color: white; opacity: 0' >
-                                <a-animation attribute="material.opacity"
-                                             delay="3500"
-                                             dur='2500'
-                                             easing="linear"
-                                             fill="forwards"
-                                             to="0.5">
-                                </a-animation>
-                                <a-text id='song-title-container' rotation="0 0 0" position='0 0.2 0' align='center' value="song title" font='https://cdn.aframe.io/fonts/mozillavr.fnt' material='opacity: 0;'>
-                                    <a-animation attribute="material.opacity"
-                                             delay="3500"
-                                             dur='2500'
-                                             easing="linear"
-                                             fill="forwards"
-                                             to="0.5">
-                                    </a-animation>
-                                </a-text>
-                            </a-entity>
-
-                            <a-entity geometry='primitive: plane; width: 6; height: 3;' position='0 2 -4.25' material='side: double; color: white; opacity: 0' >
-                                <a-animation attribute="material.opacity"
-                                             delay="3500"
-                                             dur='2500'
-                                             easing="linear"
-                                             fill="forwards"
-                                             to="0.5">
-                                </a-animation>
-                                <a-entity geometry='primitive: plane; width: 2; height: 2;' position='-1.5 0 0.1' material='side: double; color: black; opacity: 0'  text='align: center; value: House of Venus\n\n (c) 2018; color: white; width: 5; font: https://cdn.aframe.io/fonts/mozillavr.fnt'>
-                                    <a-animation attribute="material.opacity"
-                                             delay="3500"
-                                             dur='2500'
-                                             easing="linear"
-                                             fill="forwards"
-                                             to="0.5">
-                                </a-animation>
-                                </a-entity>
-                                <a-entity geometry='primitive: plane; width: 2; height: 2;' position='1.5 0 0.1' material='side: double; color: black; opacity: 0' text='align: center; value: XR Audio Player\n\nv. 0.12.3; color: white; width: 5; font: https://cdn.aframe.io/fonts/mozillavr.fnt'>
-                                    <a-animation attribute="material.opacity"
-                                             delay="3500"
-                                             dur='2500'
-                                             easing="linear"
-                                             fill="forwards"
-                                             to="0.5">
-                                </a-animation>
-                                </a-entity>
-                            </a-entity>
-
-                            <a-entity id="audio-cover-artwork" rotation="0 0 0" scale='0.1 0.1 0.1' position='0 2 -2' geometry="primitive: plane; width: 1; height: 1;" material="side: double; src: ;">
-                                <a-animation attribute="rotation"
-                                    dur="20000"
-                                    easing="linear"
-                                    fill="forwards"
-                                    to="0 360 0"
-                                    repeat="indefinite">
-                                </a-animation>
-                                <a-animation attribute="scale"
-                                             delay='3500'
-                                             dur="2500"
-                                             easing="linear"
-                                             fill="forwards"
-                                             to="3 3 3">
-                                </a-animation>
-                            </a-entity>
-
-                            <a-entity geometry="primitive: plane; width: 100; height: 100;" rotation='-90 0 0' material='src: #floor-texture; repeat: 100 100; opacity: 1.0;'>
+                                    raw: `<a-entity geometry="primitive: plane; width: 100; height: 100;" rotation='-90 0 0' material='src: #floor-texture; repeat: 100 100; opacity: 1.0;'>
                                 <a-animation attribute='material.opacity'
                                              delay='3000',
                                              dur='2000'
                                              fill='forwards'
                                              to='0'></a-animation>
-                            </a-entity>
-    `,
-                                    components: [
-                                        {
-                                            name: '.song-meta-data-panel-container',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            geometry: "primitive: plane; width: 2; height: 2;",
-                                            rotation: "-110 -180 180", //'0 -180 180',
-                                            material: 'side: double; color: red;',
-                                            position: "0 0.5 -0.5", //'0  1 -1.5',
-                                            children: [
-                                               /*{
-                                                    name: '.song-meta-data-panel-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "rotation",
-                                                    begin: 'launchPlayers',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "-110 -180 180"
-                                                },/*
-                                                {
-                                                    name: '.song-meta-data-panel-animation-1',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "position",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "0 0 -0.5"
-                                                },*/
-                                                {
-                                                    name: '#song-meta-data-panel-text',
-                                                    order: 1,
-                                                    elementType: 'a-text',
-                                                    name: '#meta-data-container',
-                                                    rotation: "0 0 0",
-                                                    position: '0 0 0.5',
-                                                    align: 'center',
-                                                    value: "this is where \n\n the song meta data will go \n\n against  a backdrop \n\n of the album cover",
-                                                    font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: '.track-list-panel-container',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            geometry: "primitive: plane; width: 2; height: 2;",
-                                            rotation: "290 90 0", //'180 90 0',
-                                            material: 'side: double; color: yellow;',
-                                            position: "2 0.5 -2.5", //'1 1 -2.5',
-                                            children: [
-                                              /*  {
-                                                    name: '.track-list-panel-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "rotation",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "290 90 0",
-                                                },
-                                                {
-                                                    name: '.track-list-panel-animation-1',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "position",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "2 0 -2.5",
-                                                },*/
-                                                {
-                                                    name: '#track-list-panel-text',
-                                                    order: 1,
-                                                    elementType: 'a-text',
-                                                    rotation:"0 0 0",
-                                                    position: '0 0 0.5',
-                                                    align: 'center',
-                                                    color: 'black',
-                                                    value: "track list",
-                                                    font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: '.edit-panel-text-container',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            geometry: "primitive: plane; width: 2; height: 2;",
-                                            rotation: "-110 90 180", //'0 90 180',
-                                            material: 'side: double; color: blue;',
-                                            position: "-2 0.5 -2.5", //'-1 1 -2.5',
-                                            children: [
-                                              /*  {
-                                                    name: '.container-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute:"rotation",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "-110 90 180"
-                                                },
-                                                {
-                                                    name: '.container-animation-1',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "position",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "-2 0 -2.5",
-                                                },*/
-                                                {   
-                                                    name: '#edit-panel-text',
-                                                    order: 1,
-                                                    elementType: 'a-text',
-                                                    rotation: "0 0 0",
-                                                    position: '0 0 0.5',
-                                                    align: 'center',
-                                                    value: "edit",
-                                                    font: 'https://cdn.aframe.io/fonts/mozillavr.fnt'
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: '.panel-container',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            geometry: "primitive: plane; width: 2; height: 2;",
-                                            rotation: "-110 0 0", //'0 0 0',
-                                            material: 'side: double; color: aquamarine;',
-                                            position: "0 0.5 -3.5", //'0 1 -2.5',
-                                            children: [
-                                               /* {
-                                                    name: '.container-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "rotation",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "-110 0 0",
-                                                },
-                                                {
-                                                    name: '.container-animation-1',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute: "position",
-                                                    delay: '3500',
-                                                    dur: "2000",
-                                                    fill: "forwards",
-                                                    to: "0 0 -4.5"
-                                                }*/
-                                            ]
-                                        },
-                                        {
-                                            name: '.title-container',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            geometry: 'primitive: plane; width: 3; height: 0.75;' ,
-                                            position: '0 3.5 -2',
-                                            material:'side: double; color: white; opacity: 0.5', //opacity: 0
-                                            children: [
-                                                /*{
-                                                    name: '.song-title-container-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation', 
-                                                    attribute: "material.opacity",
-                                                    delay:"3500",
-                                                    dur:'2500',
-                                                    easing:"linear",
-                                                    fill:"forwards",
-                                                    to: "0.5"
-                                                },*/
-                                                {
-                                                    name: '#song-title-container',
-                                                    order: 1,
-                                                    elementType: 'a-text',
-                                                    rotation:"0 0 0",
-                                                    position:'0 0.2 0',
-                                                    align:'center',
-                                                    value:"song title", font:'https://cdn.aframe.io/fonts/mozillavr.fnt',
-                                                    material:'opacity: 0.5;', //opacity: 0
-                                                    children: [
-                                                       /* {
-                                                            name: '.title-container-animation-0',
-                                                            order: 2,
-                                                            elementType: 'a-animation',
-                                                            attribute:"material.opacity",
-                                                            delay:"3500",
-                                                            dur:'2500',
-                                                            easing:"linear",
-                                                            fill:"forwards",
-                                                            to:"0.5"
-                                                        }*/
-                                                    ]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: '.hov-company-panel-container',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            geometry:'primitive: plane; width: 6; height: 3;',
-                                            position:'0 2 -4.25',
-                                            material:'side: double; color: white; opacity: 0.5', //opacity: 0
-                                            children: [
-                                               /* {
-                                                    name: '.hov-company-panel-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute:"material.opacity",
-                                                    delay: "3500",
-                                                    dur: '2500',
-                                                    easing: "linear",
-                                                    fill: "forwards",
-                                                    to: "0.5"
-                                                },*/
-                                                {
-                                                    name: '.hov-company-panel',
-                                                    order: 1,
-                                                    elementType: 'a-entity',
-                                                    geometry:'primitive: plane; width: 2; height: 2;',
-                                                    position:'-1.5 0 0.1',
-                                                    material:'side: double; color: black; opacity: 0.5', //opacity: 0
-                                                    text:'align: center; value: House of Venus\n\n (c) 2019; color: white; width: 5; font: https://cdn.aframe.io/fonts/mozillavr.fnt',
-                                                    children: [
-                                                        /*{
-                                                            name: '.company-panel-animation-0',
-                                                            order: 2,
-                                                            elementType: 'a-animation',
-                                                            attribute: "material.opacity",
-                                                            delay:"3500",
-                                                            dur:'2500',
-                                                            easing:"linear",
-                                                            fill:"forwards",
-                                                            to:"0.5"
-                                                        }*/
-                                                    ]
-                                                },
-                                                {
-                                                    name: '.xraudioplayer-version-panel',
-                                                    order: 0,
-                                                    elementType: 'a-entity',
-                                                    geometry:'primitive: plane; width: 2; height: 2;',
-                                                    position:'1.5 0 0.1',
-                                                    material:'side: double; color: black; opacity: 0.5', //opacity: 0
-                                                    text:'align: center; value: XR Audio Player\n\nv. 0.0.3; color: white; width: 5; font: https://cdn.aframe.io/fonts/mozillavr.fnt',
-                                                    children:[
-                                                     /*   {
-                                                            name: '.version-panel-animation-0',
-                                                            order: 1,
-                                                            elementType: 'a-animation',
-                                                            attribute: "material.opacity",
-                                                            delay:"3500",
-                                                            dur:'2500',
-                                                            easing:"linear",
-                                                            fill:"forwards",
-                                                            to:"0.5"
-                                                        }*/
-                                                    ]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: '#audio-cover-artwork',
-                                            order: 0,
-                                            elementType: 'a-entity',
-                                            rotation: "0 360 0",//"0 0 0",
-                                            scale:'0.1 1.1 0.1',
-                                            position: "0 1.75 -2",//'0 2 -2',
-                                            geometry:"primitive: plane; width: 1.75; height: 1.75;",
-                                            material:"side: double; src: ;",
-                                            children: [
-                                          /*      {
-                                                    name: '.cover-artwork-animation-0',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute:"rotation",
-                                                    dur:"20000",
-                                                    easing:"linear",
-                                                    fill:"forwards",
-                                                    to: "0 360 0",
-                                                    repeat:"indefinite"
-                                                },
-                                                {
-                                                    name: '.cover-artwork-animation-1',
-                                                    order: 1,
-                                                    elementType: 'a-animation',
-                                                    attribute:"scale",
-                                                    delay:'3500',
-                                                    dur:"2500",
-                                                    easing:"linear",
-                                                    fill:"forwards",
-                                                    to: "3 3 3"
-                                                }*/
-                                            ]
-                                        },
-                                        /*{
-                                            name:'a-entity',
-                                            geometry:"primitive: plane; width: 100; height: 100;",
-                                            rotation:'-90 0 0',
-                                            material:'src: #floor-texture; repeat: 100 100; opacity: 1.0;',
-                                            children: [
-                                                {
-                                                    name: 'a-animation',
-                                                    attribute:'material.opacity',
-                                                    delay:'3000',
-                                                    dur:'2000',
-                                                    fill:'forwards',
-                                                    to:'0'
-                                                } 
-                                             ]
-                                        }*/
-                                    ]
+                            </a-entity>`,
+                                    components: componentArray
                                 }
                             });
                         }
@@ -548,21 +171,13 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
                 assetsContainer: null,
                 index: -1,
                 layers: {
-                    head: {
-                        
-                    },
-                    torso: {
-                        
-                    },
-                    hands: {
-                        
-                    },
-                    legs: {
-                        
-                    },
-                    feet: {
-                        
-                    }
+                    matrix: [
+                        [],
+                        [],
+                        [],
+                        [],
+                        [],
+                    ]
                 },
                 spawn: function(){
                     console.log('only available in npm package for security reasons');
@@ -577,10 +192,29 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
                     var target = index;
                     document.querySelector('#embedded-assets-container').append(`<img id='${target.texture}' src='${target.coverURL}' preload='true' />`);
                 },
+                traverseLayerMatrix: function(){
+                    var core = self.application.core;
+                    
+                    for(var i=0; i<core.layers.matrix.length; i++){
+                        for(var j=0; j<core.layers.matrix[i].length; j++){
+                            if(core.layers.matrix[i][j]!=null){
+                                var layer = core.layers.matrix[i][j];
+                                var imgAsset = document.createElement('img');
+                                imgAsset.setAttribute('id', core.trackList[i].texture);
+                                imgAsset.setAttribute('src', core.trackList[i].cover);
+                                imgAsset.setAttribute('preload', true);
+                                core.assetsContainer.appendChild(imgAsset);
+                            }
+                        }
+                        
+                    }
+                },
                 build: function(){
                     var core = self.application.core;
                     
-                  
+                    if(core.layers.matrix[0].length>0){
+                        core.traverseLayerMatrix();
+                    }
                     ////////////////////////
                     
                     var entity10 = document.createElement('a-entity');
@@ -597,14 +231,6 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
                     console.log(core.tether);
                     
                     core.assetsContainer = document.querySelector('.embedded-assets-container');
-                    
-                    for(var i=0; i<core.trackList.length; i++){
-                        var imgAsset = document.createElement('img');
-                        imgAsset.setAttribute('id', core.trackList[i].texture);
-                        imgAsset.setAttribute('src', core.trackList[i].cover);
-                        imgAsset.setAttribute('preload', true);
-                        core.assetsContainer.appendChild(imgAsset);
-                    }
                 }
             }
         };
@@ -612,5 +238,10 @@ function XRAudioPlayer(name, height, weight, tailorMeasurements){
         this.view = 'scroll'; // scroll is the default, list is the secondary option, tertiary mode is the alternative AR or VR view
 
         this.XRSetting = 'xr'; // flat is default, ar is secondary, vr is tertiary
+        
+        console.log(`\nNew XR Component Generated: \n ------------------ \n XRHumanBody v. 0.0.1 \n type: ${self.type} \n outgoing socket? ${(self.socket!=null)} \n objId: ${self.identity} \n height: ${self.height} \n weight: ${self.weight}\n ------------------`);
+        console.log('core matrix:');
+        console.log(self.application.core.layers.matrix);
+        console.log('\n');
     }
-};
+}

@@ -1,9 +1,17 @@
-function Ledger(){
-    this.buildLedger = function(name){
-        let videoContainer = document.createElement('video');
-        videoContainer.setAttribute('id', 'videoElement');
-        videoContainer.setAttribute('autoplay', true);
+function TreeHouse(){
+    var self = this;
+    
+    this.buildLedger = function(name, sensorsConnected){ // builds the app gui for the associated document type and adds a new entry into the distributed ledger space (hyperspace)
+        var sensors = sensorsConnected;
+        if(sensorsConnected==null){
+            sensors = {
+                video: true,
+                audio: true
+            };
+        }
         
+        let videoContainer = document.createElement('video');
+        videoContainer.setAttribute('id', 'videoElement');        
         
         let audioSource = document.createElement('source');
         audioSource.setAttribute('id', 'static-selector');
@@ -58,15 +66,20 @@ function Ledger(){
         mainContainer.appendChild(videoContainer);
         mainContainer.appendChild(audioContainer);
         
-        if (navigator.mediaDevices.getUserMedia) {       
-            let video = document.querySelector("#videoElement");
-            navigator.mediaDevices.getUserMedia({video: true}).then(function(stream) {
-                video.srcObject = stream;
-            }).catch(function(error) {
-                console.log("Something went wrong!");
-          });
+        if(sensors.video){
+            self.startEyeStream();
+        }        
+              
+        if(sensor.frame=='dynamic'){
+            // core UI funcitons available in the TreeHouse specification
+            self.ui.checkWindowDimensions();
+            self.ui.setFocus(0);
+            
+            window.addEventListener('resize', function(){
+                self.ui.checkWindowDimensions();
+            });
         }
-        
+            
         // TODO add blockchain code here
         
     }
@@ -157,4 +170,99 @@ function Ledger(){
             }
         }
     }
+    
+    this.ui = {
+        application: {
+            focus: 0,
+            onMobile: null,
+            onDesktop: null,
+            isFullScreen: false,
+            videoStreaming: false
+        },
+        checkWindowDimensions : function(){
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            var app = self.ui.application;
+            
+            if(width<768){
+                app.onMobile = true;
+                app.onDesktop = false;
+                console.log('this is a mobile device with respect to its dimensions');
+            }
+            else{
+                app.onMobile = false;
+                app.onDesktop = true;
+                console.log('this is a desktop device with respect to its dimensions');
+            }
+        },
+        requestFullScreen : function(element) { //    makes the application fullscreen on fullscreen equipped browsers
+            var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen; // Supports most browsers and their versions.
+            var app = self.ui.application;
+
+            if (requestMethod) { // Native full screen.
+                requestMethod.call(element);
+                app.isFullScreen = true;
+            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                    app.isFullScreen = true;
+                }
+            }
+        },
+        exitFullScreen : function(){
+            //    makes the application fullscreen on fullscreen equipped browsers
+        /*var requestMethod = element.exitFullScreen || element.webkitCancelFullScreen || element.mozCancelFullScreen || element.msExitFullScreen; // Supports most browsers and their versions.
+            */
+            var app = self.ui.application;
+            
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                app.isFullScreen = false;
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+                app.isFullScreen = false;
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+                app.isFullScreen = false;
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+                app.isFullScreen = false;
+            }
+        },
+        setFocus : function(focus){
+            var app = self.ui.application;
+            app.focus = focus;
+        },
+        isFullScreen : function(){
+            var app = self.ui.application;
+            return app.isFullScreen;
+        }
+    };
+    
+    this.stopEyeStream = function(){
+        if (navigator.mediaDevices.getUserMedia) {       
+            let video = document.querySelector("#videoElement");
+            video.setAttribute('autoplay', false);
+            navigator.mediaDevices.getUserMedia({video: true}).then(function(stream) {
+                video.srcObject = '';
+                self.ui.application.videoStreaming = false;
+            }).catch(function(error) {
+                console.log("Something went wrong!");
+          });
+        }
+    }
+    
+    this.startEyeStream = function(){
+        if (navigator.mediaDevices.getUserMedia) {       
+            let video = document.querySelector("#videoElement");
+            video.setAttribute('autoplay', true);
+            navigator.mediaDevices.getUserMedia({video: true}).then(function(stream) {
+                video.srcObject = stream;
+                self.ui.application.videoStreaming = true;
+            }).catch(function(error) {
+                console.log("Something went wrong!");
+          });
+        }
+    }   
 }
