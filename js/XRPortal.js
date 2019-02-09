@@ -1,8 +1,8 @@
 /*
-*   XR MENU BUTTON | HOUSE OF VENUS PUBLIC AUGMENTED REALITY KINECTOME
+*   XR PORTAL | HOUSE OF VENUS PUBLIC AUGMENTED REALITY KINECTOME
 *   
 *   author: Patrice-Morgan Ongoly | @starmaker2130 | @ceo.hov
-*   title: XR Menu Button
+*   title: XR Portal
 *   version: 0.1.0
 *   last modified: Sunday, February 3, 2019 11:06:13 UTC-05:00:00
 *   description: a frame for rendering human bodies in decentralized immersive applications with handlers for outfits 
@@ -10,16 +10,16 @@
 *
 */ 
 
-function XRMenuButton(name, options){
+function XRPortal(name, contentAddress, hashLife){
     var self = this;
     if(name==null){
-        throw new Error('Cannot initialize this component without a name, height, or weight. XR Menu Button spec. v. 0.0.1');
+        throw new Error('Cannot initialize this component without a name or contentAddress. XR Menu Button spec. v. 0.0.1');
     }
     else{
-        this.type ='xrmenubutton';
+        this.type ='xrportal';
         this.socket = null;
         this.identity = name;
-        this.options = options || null;
+        this.contentAddress = contentAddress || null;
         
         this.spawn = function(){
             self.socket = io.connect(location.host);
@@ -32,10 +32,10 @@ function XRMenuButton(name, options){
         }
         
         this.build = function(){
-            console.log(`[xrmenubutton] Build menu button ${self.identity} from mark up.`);
+            console.log(`[xrportal] Build menu button ${self.identity} from mark up.`);
             self.application.core.tether = document.querySelector('.embedded-scene-container');
             
-            console.log(`[xrmenubutton] ${self.identity} tethered to DOM.`);
+            console.log(`[xrportal] ${self.identity} tethered to DOM.`);
             self.application.core.build();
         };
         
@@ -47,8 +47,8 @@ function XRMenuButton(name, options){
             self.application.core.stream();
         };
 
-        this.addTexture = function(data){
-            self.application.core.textures.add(data);
+        this.addDestination = function(preview){
+            self.application.core.destinations.add(preview);
             return true;
         };
         
@@ -66,9 +66,9 @@ function XRMenuButton(name, options){
                     'flat'
                 ],
                 dictionary: {
-                    'xrmenubutton': function(environment, location){                        
+                    'xrportal': function(environment, location){                        
                         var componentArray = [];
-                        var buttonComponent, buttonAssets;
+                        var portalComponent, portalAssets;
                         var objectLocation = location || null;
 
                         if(self!=null&&environment!=null){
@@ -79,10 +79,10 @@ function XRMenuButton(name, options){
                             console.log('loading asset dependencies into experience asset container...');*/
                             // load all of the layers associated with the current model
                                 
-                            var buttonTexture = self.application.core.textures.src;
+                            var buttonTexture = self.application.core.destinations.src;
                             console.log(buttonTexture.src);
                             
-                            buttonAssets = {
+                            portalAssets = {
                                 name: `#${self.identity}-button-texture`,
                                 elementType: 'img',
                                 src: `${buttonTexture.src}`,
@@ -94,7 +94,7 @@ function XRMenuButton(name, options){
                                 objectLocation = object.position;
                             }
                             
-                            buttonComponent = {
+                            portalComponent = {
                                 name: `#${self.identity}-button`,
                                 class: `.main-menu-button`,
                                 order: 1,
@@ -110,12 +110,12 @@ function XRMenuButton(name, options){
                             self.application.core.physics.object.pointers.push(`#${self.identity}-button`);
                             self.application.core.physics.object.position = objectLocation;
 
-                            componentArray.push(buttonComponent);
+                            componentArray.push(portalComponent);
                             
                             /*console.log(`we have added the button ${self.identity} to the environment at ${objectLocation} \n COMPONENT ARRAY`);
                             console.log(componentArray);*/
 
-                            environment.application.renderer.buildElement.push(buttonAssets);
+                            environment.application.renderer.buildElement.push(portalAssets);
 
                             environment.application.core.experience.push({
                                 name: '.xrmenubutton',
@@ -355,20 +355,20 @@ function XRMenuButton(name, options){
                     },
                     object: {
                         position: null,
-                        rotation: '-110 -45 0',
+                        rotation: '0 0 0',
                         pointers: [],
                         geometry: {
-                            radius: 0.1,
-                            primitive: 'sphere'
+                            radius: 0.5,
+                            primitive: 'circle'
                         }
                     }
                 },
                 assetsContainer: null,
                 index: -1,
-                textures: {
+                destinations: {
                     src: null,
                     add: function(childObject){ // {name: String, src: String }
-                        self.application.core.textures.src = childObject;
+                        self.application.core.destinations.src = childObject;
                         return true;
                     }
                 },
@@ -398,17 +398,17 @@ function XRMenuButton(name, options){
                 traverseTextureMatrix: function(){
                     var core = self.application.core;
                     
-                    for(var i=0; i<core.textures.length; i++){
-                        if(core.textures[i]!=null){
+                    for(var i=0; i<core.destinations.length; i++){
+                        if(core.destinations[i]!=null){
                             // other funciontality goes here
-                            console.log(core.textures[i]);
+                            console.log(core.destinations[i]);
                         }
                     }
                 },
                 build: function(){
                     var core = self.application.core;
                     
-                    if(core.textures.matrix[0].length>0){
+                    if(core.destinations.matrix[0].length>0){
                         core.traverseLayerMatrix();
                     }
                     ////////////////////////
@@ -435,6 +435,9 @@ function XRMenuButton(name, options){
 
         this.XRSetting = 'xr'; // flat is default, ar is secondary, vr is tertiary
         
-        console.log(`\nNew XR Component Generated: \n ------------------ \n XRMenuButton v. 0.0.1 \n type: ${self.type} \n outgoing socket? ${(self.socket!=null)} \n objId: ${self.identity} \n ------------------`);
+        if(contentAddress!=null){
+            self.addDestination(contentAddress);
+        }
+        console.log(`\nNew XR Component Generated: \n ------------------ \n XRPortal v. 0.0.1 \n type: ${self.type} \n outgoing socket? ${(self.socket!=null)} \n objId: ${self.identity} \n ------------------`);
     }
 }

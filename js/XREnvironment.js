@@ -69,6 +69,9 @@ function XREnvironment(height, width, length, time){
                 },
                 'xrmenubutton': function(renderView){
                     /* XR MENU BUTTON V. 0.4.0 */
+                },
+                'xrportal': function(renderView){
+                    /* XR MENU BUTTON V. 0.4.0 */
                 }
             },
             createPointer: function(target){
@@ -147,7 +150,7 @@ function XREnvironment(height, width, length, time){
                     }
                 }
 
-                console.log(componentPointer);
+                //console.log(componentPointer);
                 if(key.children!=null&&key.children.length>0){
                     console.log('this component has children!');
                     for(var child = 0; child<key.children.length; child++){
@@ -158,9 +161,9 @@ function XREnvironment(height, width, length, time){
             attachFrameToDOM: function(key, target){
                 //console.log(key.elementType);
                 //console.log(key);
-                if(key.elementType=='xraudio'||key.elementType=='xrhumanbody'||key.elementType=='xrmenubutton'){ // first order aframe component
-                    console.log('--------------------- \n Attaching First Order component');
-                    console.log(key);
+                if(key.elementType=='xraudio'||key.elementType=='xrhumanbody'||key.elementType=='xrmenubutton'||key.elementType=='xrportal'){ // first order aframe component
+                    /*console.log('--------------------- \n Attaching First Order component');
+                    console.log(key);*/
                     var XRComponents = new Array(key.build.components.length);
                     for(var k=0; k<XRComponents.length; k++){
                         let currentComponent = key.build.components[k];
@@ -189,10 +192,10 @@ function XREnvironment(height, width, length, time){
                         if(key.class=='.main-menu-button'){
                             target = '.embedded-scene-container';
                         }
-                        console.log(`TARGET: ${target}`);
+                        /*console.log(`TARGET: ${target}`);
                         console.log(`KEY :`);
                         console.log(key.elementType);
-                        console.log(XRComponent);
+                        console.log(XRComponent);*/
                         document.querySelector(target).appendChild(XRComponent);
                     }
 
