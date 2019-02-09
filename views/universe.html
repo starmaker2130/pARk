@@ -23,8 +23,7 @@
             var HouseOfVenus = new TreeHouse();
             
             HouseOfVenus.buildLedger('4467 Technology Drive', {video: true, audio: false, frame: 'dynamic'});
-            
-            
+
             /*
             *   -----------------------------------------------------------------------------------------------------------
             *                                                  TERMS
@@ -40,8 +39,8 @@
             
             var myOffice = new XREnvironment(10, 10, 10); // smart conrtact for a hyperreality space, the space is being used for business purposes hence the name "myOffice"
             
-            var myModel = new XRHumanBody('Patrice-Morgan', 1.85, 75.2); //
-            var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);
+           // var myModel = new XRHumanBody('Patrice-Morgan', 1.85, 75.2); //
+           // var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);
 
             var myPlaylist = new XRAudioPlayer('playlist1');
             
@@ -77,9 +76,9 @@
 
             myPlaylist.addFromList(collection);            
             
-            myModel.addLayer(myOutfit);
+            //myModel.addLayer(myOutfit);
             
-            myOffice.add(myModel, '1 2 2');
+           // myOffice.add(myModel, '1 2 2');
             myOffice.add(myPlaylist);
             
             

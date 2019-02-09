@@ -4,7 +4,7 @@
     <meta name='viewport' content='width=device-width,initial-scale=1.0' />
     <title>collection generator</title>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Concert+One');
+        /*@import url('https://fonts.googleapis.com/css?family=Concert+One');*/
             
         * {
             margin: 0;
@@ -12,26 +12,67 @@
         }
         
         body, html{
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Concert One', cursive;
+            font-family: monospace;
+            background-color: rgba(255, 0, 0, 0.4);
+            color: white;
+            /*font-family: 'Concert One', cursive;*/
+        }
+        
+        #main-app-container{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+        
+        #format-preview-container{
+            width: 550px;
+            height: 185px;
+            position: relative;
+            margin: 5% auto 0 auto;
+        }
+        
+        #album-cover-preview-container{
+            left: 1%;
+            position: absolute;
+            font-size: 90%;
+            width: 180px;
+            padding: 1%;
+            height: 180px;
+            border-radius: 10px;
+            border: 0;
+            background-image: url('../media/img/Blonde.png');
+            background-size: 100% auto;
+            background-position: center center;
+            /*box-shadow: 5px 5px white;*/
+            color: black;
         }
         
         #collection-format-container{
-            width: 300px;
-            height: 175px;
-            margin: 5% auto;
+            right: 1%;
+            position: absolute;
+            font-size: 90%;
+            width: 250px;
+            padding: 1%;
+            height: 180px;
             border-radius: 10px;
-            border: 5px white solid;
-            background-color: white;
-            box-shadow: 5px 5px white;
+            border: 2px white solid;
+            background-color: pink;
+            /*box-shadow: 5px 5px white;*/
             color: black;
         }
         
         #generator-form-container{
             width: 300px;
             height: 300px;
-            margin: 2% auto;
+            margin: 5% auto 0 auto;
         }
         
         input{
@@ -46,7 +87,9 @@
         
         input[type='text']{
             color: white;
-            background-color: rgba(0, 0, 0, 0.25);
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 2px white solid;
+            font-size: 85%;
         }
         
         input:focus{
@@ -60,20 +103,52 @@
         }
         
         #add-to-collection-button{
-            background-color: greenyellow;
-            color: blue;
+            width: 75px;
+            height: 75px;
+            border-radius: 10px;
+            color: white;
+            font-size: 150%;
+            text-align: center;
+            display: block;
+            position: absolute;
+            left: 40%;
+            line-height: 75px;
+            background-color: rgba(255, 255, 255, 0);
+            border: 2px white solid;
+        }
+        
+        #add-to-collection-button:hover{
+            color: black;
+            background-color: white;
         }
         
         #build-collection-button{
-            background-color: red;
+            display: block;
+            position: absolute;
+            right: 40%;
+            width: 75px;
+            height: 75px;
+            border-radius: 10px;
             color: white;
+            font-size: 150%;
+            text-align: center;
+            line-height: 75px;
+            background-color: rgba(255, 255, 255, 0);
+            border: 2px white solid;
+        }
+        
+        #build-collection-button:hover{
+            color: black;
+            background-color: white;
         }
         
         .main-property-header, .main-property-header-value{
             display: inline;
+            font-size: 90%;
         }
         
         .indent-0{
+            margin-top: 5px;
             margin-left: auto;
         }
         
@@ -87,6 +162,11 @@
         
         .collection-button{
             height: 40px;
+        }
+        
+        input[type='text']::placeholder{
+            color: white;
+            text-align: center;
         }
         
         #collection-bank-container{
@@ -182,29 +262,33 @@
     </script>
 </head>
 <body>
-    <div>
+    <div id='main-app-container'>
         <div id='collection-bank-container'></div>
-        <div id='collection-format-container'>
-            <h3 class='indent-0'>'ASongForWomen': {</h3>
-            <div class='indent-1'>
-                <h4 class='main-property-header'>coverURL: </h4><h6 class='main-property-header-value'>'../media/img/Blonde.png',</h6>
+        <div id='format-preview-container'>
+            <div id='album-cover-preview-container'></div>
+            <div id='collection-format-container'>
+                <h3 class='indent-0'>'ASongForWomen': {</h3>
+                <div class='indent-1'>
+                    <h4 class='main-property-header'>coverURL: </h4><h6 class='main-property-header-value'>'../media/img/Blonde.png',</h6>
+                </div>
+                <div class='indent-1'>
+                    <h4 class='main-property-header'>audioURL: </h4><h6 class='main-property-header-value'>'../media/audio/Nights.mp3',</h6>
+                </div>
+                <h4 class='main-property-header indent-1'>metadata: {</h4>
+                <div class='title-format-container indent-2'>
+                    <h5 class='title-format-header main-property-header'>title: </h5><h6 class='title-format-header main-property-header-value'>'Nights',</h6>
+                </div>
+                <div class='author-format-container indent-2'>
+                    <h5 class='author-format-header main-property-header'>author: </h5><h6 class='author-format-header main-property-header-value'>'Frank Ocean',</h6>
+                </div>
+                <div class='year-format-container indent-2'>
+                    <h5 class='year-format-header main-property-header'>year: </h5><h6 class='year-format-header main-property-header-value'>2016</h6>
+                </div>
+                <h4 class='indent-1'>}</h4>
+                <h3 class='indent-0'>}</h3>
             </div>
-            <div class='indent-1'>
-                <h4 class='main-property-header'>audioURL: </h4><h6 class='main-property-header-value'>'../media/audio/Nights.mp3',</h6>
-            </div>
-            <h4 class='main-property-header indent-1'>metadata: {</h4>
-            <div class='title-format-container indent-2'>
-                <h5 class='title-format-header main-property-header'>title: </h5><h6 class='title-format-header main-property-header-value'>'Nights',</h6>
-            </div>
-            <div class='author-format-container indent-2'>
-                <h5 class='author-format-header main-property-header'>author: </h5><h6 class='author-format-header main-property-header-value'>'Frank Ocean',</h6>
-            </div>
-            <div class='year-format-container indent-2'>
-                <h5 class='year-format-header main-property-header'>year: </h5><h6 class='year-format-header main-property-header-value'>2016</h6>
-            </div>
-            <h4 class='indent-1'>}</h4>
-            <h3 class='indent-0'>}</h3>
         </div>
+        
         <div id='generator-form-container'>
             <input id='track-identifier' placeholder='track xyz' type='text' />
             <input id='cover-url' placeholder='../media/img/cover-url.png' type='text' />
@@ -213,8 +297,8 @@
             <input id='track-author' placeholder='Alphabet' type='text' />
             <input id='production-year' placeholder='1995' type='text' />
 
-            <input type='button' id='add-to-collection-button' class='collection-button' value='add' />
-            <input type='button' id='build-collection-button' class='collection-button' value='build' />
+            <input type='button' id='add-to-collection-button' class='collection-button' value='+' />
+            <input type='button' id='build-collection-button' class='collection-button' value='@' />
         </div>
     </div>
 </body>

@@ -55,6 +55,14 @@ app.instance.get('/universe', function(req, res){
     res.render('universe.html', {root: app.config.DIRECTORY[0]});
 });
 
+app.instance.get('/cARd', function(req, res){
+    res.render('CreativeAugmentedRealityDesktop.html', {root: app.config.DIRECTORY[0]});
+});
+
+app.instance.get('/htc', function(req, res){
+    res.render('htc.html', {root: app.config.DIRECTORY[0]});
+});
+
 app.instance.get('/gencoll', function(req, res){
     res.render('gcollection.html', {root: app.config.DIRECTORY[0]});
 });

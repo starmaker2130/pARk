@@ -14,7 +14,7 @@ function XRAudioPlayer(name){
         this.spawn = function(){
             self.socket = io.connect(location.host);
             //self.socket.emit('spawnXRAudioPlaylist', {status: true});
-        };
+        }
 
         this.build = function(){
             console.log(`[xraudio] Build player ${self.identity} from mark up.`);
@@ -23,7 +23,7 @@ function XRAudioPlayer(name){
             
             console.log(`[xraudio] ${self.identity} tethered to DOM.`);
             self.application.core.build();
-        };
+        }
         
         this.render = function(){
             console.log('new build function goes here');
@@ -49,7 +49,7 @@ function XRAudioPlayer(name){
             self.application.core.trackList.push(track);
 
            // console.log(`<img id='${track.texture}' src='${track.cover}' preload='true' />`);
-        };
+        }
 
         this.addFromList = function(collection){
             var list = collection;
@@ -91,7 +91,7 @@ function XRAudioPlayer(name){
 
         this.stream = function(){
             self.application.core.stream();
-        };
+        }
 
         this.application = {
             focus: 0, // 0 = home; 1 = audio; 2 = visual; 3 = search
@@ -383,7 +383,7 @@ function XRAudioPlayer(name){
                     }
 
                     console.log(`playing ${core.trackList[core.index].audio}`);
-
+                    
                     document.querySelector('#song-title-container').setAttribute('value', core.trackList[core.index].title);
                     document.querySelector('#meta-data-container').setAttribute('value', `author: ${core.trackList[core.index].author} \n\n year: ${core.trackList[core.index].year}`);
 
@@ -799,7 +799,7 @@ function XRAudioPlayer(name){
                     }
                 }
             }
-        };
+        }
 
         this.view = 'scroll'; // scroll is the default, list is the secondary option, tertiary mode is the alternative AR or VR view
 

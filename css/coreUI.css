@@ -86,3 +86,68 @@ body, html, .main-app-container{
     background-color: rgba(255, 255, 255, 0.7); 
     cursor: pointer;
 }
+
+.dpad-button{
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: black;
+    display: block;
+    position: absolute;
+    bottom: 15%;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+}
+
+.dpad-button:hover{
+    background-color: rgba(255, 255, 255, 1.0);
+    color: black;
+    cursor: pointer;
+}
+
+#left-dpad-button{
+    left: 50px;
+}
+
+#right-dpad-button{
+    left: 150px;
+}
+
+#up-dpad-button{
+    left: 100px;
+    bottom: 20%;
+}
+
+#down-dpad-button{
+    left: 100px;
+    bottom: 10%;
+}
+
+.rotate-button{
+    z-index: 100;
+    position: absolute;
+    bottom: 30%;
+    width: 100px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.rotate-button:hover{
+    background-color: rgba(255, 255, 255, 1.0);
+}
+
+#rotate-clockwise-button{
+    left: 20px;
+    border-radius: 50px 15px 5px 30px;
+}
+
+#rotate-counterclockwise-button{
+    left: 130px;
+    border-radius: 15px 50px 30px 5px;
+}

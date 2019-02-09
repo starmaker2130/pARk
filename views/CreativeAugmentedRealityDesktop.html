@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+    <title>House of Venus, Benefit Corporation | Public Augmented Reality Kinectome v. 0.2.0 | Shell</title>
+    <link rel='stylesheet' type='text/css' href='../css/coreUI.css' />
+    <script src='../js/coreUX.js'></script>
+    <script src='../js/XRMenuButton.js'></script>
+    <script src='../js/XRAudioPlayer.js'></script>
+    <script src='../js/XRBodyLayer.js'></script>
+    <script src='../js/XRHumanBody.js'></script>
+    <script src='../js/XREnvironment.js'></script>
+    <script src='../js/aframe.min.js'></script>
+    <!--<script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            /*
+            *   -----------------------------------------------------------------------------------------------------------
+            *                                               LEDGERSPACE
+            *   -----------------------------------------------------------------------------------------------------------
+            *
+            */
+            
+            var myOffice = new TreeHouse();
+            
+            myOffice.buildLedger('4467 Technology Drive', {video: true, audio: false, frame: 'dynamic'});
+
+            /*
+            *   -----------------------------------------------------------------------------------------------------------
+            *                                                  TERMS
+            *   -----------------------------------------------------------------------------------------------------------
+            *
+            */
+            
+            var cARd = new XREnvironment(5, 5, 5); // smart conrtact for a hyperreality space, the space is being used for business purposes hence the name "myOffice"
+            
+            var CEO = new XRHumanBody('Patrice-Morgan', 1.85, 75.2);
+            var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);
+            
+            var instagramButton = new XRMenuButton('Instagram');
+            var twitterButton = new XRMenuButton('Twitter');
+            var profileButton = new XRMenuButton('Profile');
+            
+            instagramButton.addTexture({name: 'help', src: '../media/texture/facebook-icon.png'});    
+            twitterButton.addTexture({name: 'twitter', src: '../media/texture/twitter-icon.png'});
+            profileButton.addTexture({name: 'profile', src: '../media/texture/profile-icon.png'});
+            
+            CEO.addLayer(myOutfit);
+            cARd.add(CEO, '0 1.5 2');
+            cARd.add(instagramButton, '1 1 2');
+            
+            cARd.add(profileButton, '-1 1 2');
+            cARd.add(twitterButton, '0 1 2');
+            
+            /*
+            *   -----------------------------------------------------------------------------------------------------------
+            *                                         SIGNATURE - LOAD CONTRACT
+            *   -----------------------------------------------------------------------------------------------------------
+            *
+            */
+            
+            myOffice.loadExperience(cARd);
+             
+        });
+    </script>
+</head>
+<body>
+    <div class='main-app-container'>
+    </div>
+</body>
+</html>

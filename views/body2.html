@@ -22,7 +22,7 @@
             position: absolute;
             right: 5%;
             width: 100px;
-            height: 300px;
+            height: 350px;
             z-index: 10;
         }
     </style>
@@ -40,53 +40,95 @@
               });
             }
             
-            document.getElementById('option-0').addEventListener('click', function(){
-                document.querySelector('#bil-model').setAttribute('visible', 'false');
-                document.querySelector('#plaid-model').setAttribute('visible', 'false');
-                document.querySelector('#exeter-model').setAttribute('visible', 'false');
+            var options = document.getElementsByClassName("option-button");
+            var models = document.getElementsByClassName("obj-model-entity");
+
+            var myFunction = function() {
+                var id = parseInt(this.getAttribute('id').substring(7));
+                console.log(id);
                 
-                document.getElementById('main-model').setAttribute('visible', 'true');
-            });
-            
-            document.getElementById('option-1').addEventListener('click', function(){
-                document.querySelector('#main-model').setAttribute('visible', 'false');
-                document.querySelector('#plaid-model').setAttribute('visible', 'false');
-                document.querySelector('#exeter-model').setAttribute('visible', 'false');
-                
-                document.getElementById('bil-model').setAttribute('visible', 'true');
-            });
-            
-            document.getElementById('option-2').addEventListener('click', function(){
-                document.querySelector('#main-model').setAttribute('visible', 'false');
-                document.querySelector('#bil-model').setAttribute('visible', 'false');
-                document.querySelector('#exeter-model').setAttribute('visible', 'false');
-                
-                document.getElementById('plaid-model').setAttribute('visible', 'true');
-            });
-            
-            document.getElementById('option-3').addEventListener('click', function(){
-                document.querySelector('#main-model').setAttribute('visible', 'false');
-                document.querySelector('#bil-model').setAttribute('visible', 'false');
-                document.querySelector('#plaid-model').setAttribute('visible', 'false');
-                
-                document.getElementById('exeter-model').setAttribute('visible', 'true');
-            });
-        
+                switch(id){
+                    case 0:
+                        for (var i = 0; i < models.length; i++) { //click handler for option buttons
+                            if(models[i].getAttribute('id')=='main-model'){
+                                models[i].setAttribute('visible', true);
+                                continue;
+                            }
+                            models[i].setAttribute('visible', false);
+                        }
+                        break;
+                    case 1:
+                        for (var i = 0; i < models.length; i++) { //click handler for option buttons
+                            if(models[i].getAttribute('id')=='bil-model'){
+                                models[i].setAttribute('visible', true);
+                                continue;
+                            }
+                            models[i].setAttribute('visible', false);
+                        }
+                        break;
+                    case 2:
+                        for (var i = 0; i < models.length; i++) { //click handler for option buttons
+                            if(models[i].getAttribute('id')=='plaid-model'){
+                                models[i].setAttribute('visible', true);
+                                continue;
+                            }
+                            models[i].setAttribute('visible', false);
+                        }
+                        break;
+                    case 3:
+                        for (var i = 0; i < models.length; i++) { //click handler for option buttons
+                            if(models[i].getAttribute('id')=='exeter-model'){
+                                models[i].setAttribute('visible', true);
+                                continue;
+                            }
+                            models[i].setAttribute('visible', false);
+                        }
+                        break;
+                    case 4:
+                        for (var i = 0; i < models.length; i++) { //click handler for option buttons
+                            if(models[i].getAttribute('id')=='harvard-sweatpants-model'){
+                                models[i].setAttribute('visible', true);
+                                continue;
+                            }
+                            models[i].setAttribute('visible', false);
+                        }
+                        break;
+                    case 5:
+                        for (var i = 0; i < models.length; i++) { //click handler for option buttons
+                            if(models[i].getAttribute('id')=='harvard-shorts-model'){
+                                models[i].setAttribute('visible', true);
+                                continue;
+                            }
+                            models[i].setAttribute('visible', false);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            };
+
+            for (var i = 0; i < options.length; i++) { //click handler for option buttons
+                options[i].addEventListener('click', myFunction, false);
+            }
         });
     </script>
 </head>
 <body>
     <div class='main-app-container'>
         <div id='option-container'>
-            <input type='button' value='model' id='option-0' class='option-button' />
+            <input type='button' value='main' id='option-0' class='option-button' />
             <input type='button' value='bil' id='option-1' class='option-button' />
             <input type='button' value='plaid' id='option-2' class='option-button' />
             <input type='button' value='exeter' id='option-3' class='option-button' />
+            <input type='button' value='harvard' id='option-4' class='option-button' />
+            <input type='button' value='shorts' id='option-5' class='option-button' />
+            <!--<input type='button' value='sweat' id='option-5' class='option-button' />
+            <input type='button' value='bl. shoes' id='option-6' class='option-button' />-->
         </div>
         <a-scene embedded class='embedded-assets-container' timeout='15000'>
             <a-assets>
-                <a-asset-item id="obj-model" src="../media/model/model.obj" preload='true'></a-asset-item>
-                <a-asset-item id="obj-mtl" src="../media/model/model.mtl" preload='true'></a-asset-item>
+                <a-asset-item id="obj-model" src="../media/model/plaidmaryland.obj" preload='true'></a-asset-item>
+                <a-asset-item id="obj-mtl" src="../media/model/plaidmaryland.mtl" preload='true'></a-asset-item>
                 
                 <a-asset-item id="bil-obj-model" src="../media/model/bilcouturetop.obj" preload='true'></a-asset-item>
                 <a-asset-item id="bil-obj-mtl" src="../media/model/bilcouturetop.mtl" preload='true'></a-asset-item>
@@ -96,6 +138,21 @@
                 
                 <a-asset-item id="exeter-obj-model" src="../media/model/plaidexeter.obj" preload='true'></a-asset-item>
                 <a-asset-item id="exeter-obj-mtl" src="../media/model/plaidexeter.mtl" preload='true'></a-asset-item>
+                
+                <!--
+                <a-asset-item id="harvard-full-obj-model" src="../media/model/HarvardFullBody.obj" preload='true'></a-asset-item>
+                <a-asset-item id="harvard-full-obj-mtl" src="../media/model/HarvardFullBody.mtl" preload='true'></a-asset-item>
+                -->
+                <a-asset-item id="harvard-sweatpants-obj-model" src="../media/model/HarvardFullSweatpants.obj" preload='true'></a-asset-item>
+                <a-asset-item id="harvard-sweatpants-obj-mtl" src="../media/model/HarvardFullSweatpants.mtl" preload='true'></a-asset-item>
+                
+                <a-asset-item id="harvard-shorts-obj-model" src="../media/model/HarvardShorts.obj" preload='true'></a-asset-item>
+                <a-asset-item id="harvard-shorts-obj-mtl" src="../media/model/HarvardShorts.mtl" preload='true'></a-asset-item>
+                
+                <!--
+                <a-asset-item id="harvard-black-shoes-obj-model" src="../media/model/HarvardFullSweatpantsBlackShoes.obj" preload='true'></a-asset-item>
+                <a-asset-item id="harvard-black-shoes-obj-mtl" src="../media/model/HarvardFullSweatpantsBlackShoes.mtl" preload='true'></a-asset-item>
+                -->
             </a-assets>
             
             <a-entity id='main-model' class='obj-model-entity' obj-model="obj: #obj-model; mtl: #obj-mtl" rotation='-90 0 0' position='0 1 0' scale='0.1 0.1 0.1' visible='true'>
@@ -166,6 +223,76 @@
                 </a-animation>
             </a-entity>
             
+            <!--<a-entity id='harvard-full-model' class='obj-model-entity' obj-model="obj: #harvard-full-obj-model; mtl: #harvard-full-obj-mtl" rotation='-90 0 0' position='0 1 0' scale='0.1 0.1 0.1' visible='false'>
+                <a-animation attribute="rotation"
+                    dur="20000"
+                    easing="linear"
+                    fill="forwards"
+                    to="-90 360 0"
+                    repeat="indefinite">
+                </a-animation>
+                <a-animation attribute="scale"
+                             delay='3500'
+                             dur="2500"
+                             easing="linear"
+                             fill="forwards"
+                             to="3 3 3">
+                </a-animation>
+            </a-entity>
+            -->
+            
+            <a-entity id='harvard-sweatpants-model' class='obj-model-entity' obj-model="obj: #harvard-sweatpants-obj-model; mtl: #harvard-sweatpants-obj-mtl" rotation='-90 0 0' position='0 1 0' scale='0.1 0.1 0.1' visible='false'>
+                <a-animation attribute="rotation"
+                    dur="20000"
+                    easing="linear"
+                    fill="forwards"
+                    to="-90 360 0"
+                    repeat="indefinite">
+                </a-animation>
+                <a-animation attribute="scale"
+                             delay='3500'
+                             dur="2500"
+                             easing="linear"
+                             fill="forwards"
+                             to="3 3 3">
+                </a-animation>
+            </a-entity>
+            
+            <a-entity id='harvard-shorts-model' class='obj-model-entity' obj-model="obj: #harvard-shorts-obj-model; mtl: #harvard-shorts-obj-mtl" rotation='-90 0 0' position='0 0 0' scale='0.1 0.1 0.1' visible='false'>
+                <a-animation attribute="rotation"
+                    dur="20000"
+                    easing="linear"
+                    fill="forwards"
+                    to="-90 360 0"
+                    repeat="indefinite">
+                </a-animation>
+                <a-animation attribute="scale"
+                             delay='3500'
+                             dur="2500"
+                             easing="linear"
+                             fill="forwards"
+                             to="3 3 3">
+                </a-animation>
+            </a-entity>
+           
+            <!--
+            <a-entity id='harvard-black-shoes-model' class='obj-model-entity' obj-model="obj: #harvard-black-shoes-obj-model; mtl: #harvard-black-shoes-obj-mtl" rotation='-90 0 0' position='0 1 0' scale='0.1 0.1 0.1' visible='false'>
+                <a-animation attribute="rotation"
+                    dur="20000"
+                    easing="linear"
+                    fill="forwards"
+                    to="-90 360 0"
+                    repeat="indefinite">
+                </a-animation>
+                <a-animation attribute="scale"
+                             delay='3500'
+                             dur="2500"
+                             easing="linear"
+                             fill="forwards"
+                             to="3 3 3">
+                </a-animation>
+            </a-entity>
+            -->
             <a-entity position='0 0 4' rotation='0 0 0'>
                 <a-camera id='main-user-camera' userHeight = '1.8' look-controls wasd-controls></a-camera>
             </a-entity>
