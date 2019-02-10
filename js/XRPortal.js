@@ -31,6 +31,12 @@ function XRPortal(name, contentAddress, hashLife){
             return true;
         }
         
+        this.setRotation = function(target){
+            console.log(`rotate ${self.identity} to ${target}`);
+            self.application.core.setRotation(target);
+            return true;
+        }
+        
         this.build = function(){
             console.log(`[xrportal] Build menu button ${self.identity} from mark up.`);
             self.application.core.tether = document.querySelector('.embedded-scene-container');
@@ -79,13 +85,13 @@ function XRPortal(name, contentAddress, hashLife){
                             console.log('loading asset dependencies into experience asset container...');*/
                             // load all of the layers associated with the current model
                                 
-                            var buttonTexture = self.application.core.destinations.src;
-                            console.log(buttonTexture.src);
+                            var portalTexture = self.application.core.destinations.src;
+                            console.log(portalTexture.src);
                             
                             portalAssets = {
-                                name: `#${self.identity}-button-texture`,
+                                name: `#${self.identity}-portal-texture`,
                                 elementType: 'img',
-                                src: `${buttonTexture.src}`,
+                                src: `${portalTexture.src}`,
                                 preload: 'true'
                             };
                             
@@ -94,33 +100,52 @@ function XRPortal(name, contentAddress, hashLife){
                                 objectLocation = object.position;
                             }
                             
-                            portalComponent = {
-                                name: `#${self.identity}-button`,
-                                class: `.main-menu-button`,
-                                order: 1,
-                                elementType: 'a-entity',
-                                geometry: `primitive: ${object.geometry.primitive}; radius: ${object.geometry.radius};`,
-                                rotation: `${object.rotation}`,
-                                material: `src: #${self.identity}-button-texture; side: double; color: white; opacity: 0.95;`,
-                                position: objectLocation,
-                                children:[]
-                            };
+                            if(self.application.core.destinations.src.gif!=null&&self.application.core.destinations.src.gif==true){
+                                portalComponent = {
+                                    name: `#${self.identity}-portal`,
+                                    class: `.main-menu-portal`,
+                                    order: 1,
+                                    elementType: 'a-entity',
+                                    geometry: `primitive: ${object.geometry.primitive}; radius: ${object.geometry.radius};`,
+                                    rotation: `${object.rotation}`,
+                                    material: `shader:gif;src: url(${portalTexture.src});side: double; opacity: 0.9;`,
+                                    /*gif: '',*/
+                                    position: objectLocation,
+                                    children:[]
+                                };
+                                
+                                self.application.core.gifsPresent = true;
+                                console.log('GIF PRESENT');
+                            }
+                            else{
+                                portalComponent = {
+                                    name: `#${self.identity}-portal`,
+                                    class: `.main-menu-portal`,
+                                    order: 1,
+                                    elementType: 'a-entity',
+                                    geometry: `primitive: ${object.geometry.primitive}; radius: ${object.geometry.radius};`,
+                                    rotation: `${object.rotation}`,
+                                    material: `src: #${self.identity}-portal-texture; side: double; color: white; opacity: 0.95;`,
+                                    position: objectLocation,
+                                    children:[]
+                                };
 
+                            }
                             
-                            self.application.core.physics.object.pointers.push(`#${self.identity}-button`);
+                            self.application.core.physics.object.pointers.push(`#${self.identity}-portal`);
                             self.application.core.physics.object.position = objectLocation;
 
                             componentArray.push(portalComponent);
                             
-                            /*console.log(`we have added the button ${self.identity} to the environment at ${objectLocation} \n COMPONENT ARRAY`);
+                            /*console.log(`we have added the portal ${self.identity} to the environment at ${objectLocation} \n COMPONENT ARRAY`);
                             console.log(componentArray);*/
 
                             environment.application.renderer.buildElement.push(portalAssets);
 
                             environment.application.core.experience.push({
-                                name: '.xrmenubutton',
+                                name: '.xrportal',
                                 order: 0,
-                                elementType: 'xrmenubutton',
+                                elementType: 'xrportal',
                                 build: {
                                     raw: `<a-entity geometry="primitive: plane; width: 100; height: 100;" rotation='-90 0 0' material='src: #floor-texture; repeat: 100 100; opacity: 1.0;'>
                                 <a-animation attribute='material.opacity'
@@ -134,7 +159,7 @@ function XRPortal(name, contentAddress, hashLife){
                             });
                         }
                         else{
-                            console.log('execute handler for xrmenubutton object');
+                            console.log('execute handler for xrportal object');
                         }
                     }
                 },
@@ -363,6 +388,7 @@ function XRPortal(name, contentAddress, hashLife){
                         }
                     }
                 },
+                gifsPresent: false,
                 assetsContainer: null,
                 index: -1,
                 destinations: {
@@ -379,7 +405,17 @@ function XRPortal(name, contentAddress, hashLife){
                         console.log(target);
                         //document.querySelector(`#${self.identity}-button`).setAttribute('geometry.radius', target);
                     }else{
-                        throw new Error('INVALID TYPE. Cannot scale button to non-number target.');
+                        throw new Error('INVALID TYPE. Cannot scale portal to non-number target.');
+                    }
+                },
+                setRotation: function(target){
+                    if(typeof(target)=='string'){
+                        console.log('ROTATING TARGET');
+                        self.application.core.physics.object.rotation = target;
+                        console.log(target);
+                        //document.querySelector(`#${self.identity}-button`).setAttribute('geometry.radius', target);
+                    }else{
+                        throw new Error('INVALID TYPE --> FORMAT. Cannot rotate portal to specified target.');
                     }
                 },
                 spawn: function(){
@@ -388,7 +424,13 @@ function XRPortal(name, contentAddress, hashLife){
                 source: null,
                 stream: function(){
                     var core = self.application.core;
-
+                    
+                    // stream all gifs if any
+                    if(self.application.core.gifsPresent){
+                        console.log('streaming gifs!');
+                        document.querySelector(`#${self.identity}-portal`).play();
+                    }
+                    
                 },
                 tether: null,
                 makeTextureLoader: function(index){

@@ -39,6 +39,7 @@ function XREnvironment(height, width, length, time){
         }
         
         //self.pointers.elements.push(``)
+        console.log(Object.keys(self.application.core.childList).length);
         return Object.keys(self.application.core.childList).length;
     }
     
@@ -71,6 +72,9 @@ function XREnvironment(height, width, length, time){
                     /* XR MENU BUTTON V. 0.4.0 */
                 },
                 'xrportal': function(renderView){
+                    /* XR MENU BUTTON V. 0.4.0 */
+                },
+                'xrpanel': function(renderView){
                     /* XR MENU BUTTON V. 0.4.0 */
                 }
             },
@@ -161,7 +165,7 @@ function XREnvironment(height, width, length, time){
             attachFrameToDOM: function(key, target){
                 //console.log(key.elementType);
                 //console.log(key);
-                if(key.elementType=='xraudio'||key.elementType=='xrhumanbody'||key.elementType=='xrmenubutton'||key.elementType=='xrportal'){ // first order aframe component
+                if(key.elementType=='xraudio'||key.elementType=='xrhumanbody'||key.elementType=='xrmenubutton'||key.elementType=='xrportal'||key.elementType=='xrpanel'){ // first order aframe component
                     /*console.log('--------------------- \n Attaching First Order component');
                     console.log(key);*/
                     var XRComponents = new Array(key.build.components.length);
@@ -189,7 +193,7 @@ function XREnvironment(height, width, length, time){
                         self.application.core.pointers.experienceContainer.appendChild(XRComponent);
                     }
                     else{
-                        if(key.class=='.main-menu-button'){
+                        if(key.class=='.main-menu-button'||key.class=='.main-menu-portal'||key.class=='.main-menu-panel'){
                             target = '.embedded-scene-container';
                         }
                         /*console.log(`TARGET: ${target}`);
@@ -279,6 +283,18 @@ function XREnvironment(height, width, length, time){
                         var videoStream = self.application.core.pointers.stream.video[0].name;
                         self.application.core.childList[videoStream].stream();
                     }
+                    
+                    var environmentChildList = self.application.core.childList;
+                    
+                    for(var i = 0; i<Object.keys(environmentChildList).length; i++){
+                        // given the array containing the keys of the child objects
+                        // at key i (= 0 to the end of the array) 
+                        let key = Object.keys(environmentChildList)[i];
+                        if(environmentChildList[key].type=='xraudio'||environmentChildList[key].type=='xrvideo') continue;
+                        console.log(`Streaming ${key} module...`);
+                        environmentChildList[key].stream();
+                    }
+                    
                 }
             },
             render : function(){

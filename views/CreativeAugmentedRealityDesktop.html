@@ -5,6 +5,7 @@
     <title>House of Venus, Benefit Corporation | Public Augmented Reality Kinectome v. 0.2.0 | Shell</title>
     <link rel='stylesheet' type='text/css' href='../css/coreUI.css' />
     <script src='../js/coreUX.js'></script>
+    <script src='../js/XRPanel.js'></script>
     <script src='../js/XRPortal.js'></script>
     <script src='../js/XRMenuButton.js'></script>
     <script src='../js/XRAudioPlayer.js'></script>
@@ -12,7 +13,9 @@
     <script src='../js/XRHumanBody.js'></script>
     <script src='../js/XREnvironment.js'></script>
     <script src='../js/aframe.min.js'></script>
-    <!--<script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>-->
+    <script src='../js/aframe-gif-shader.min.js'></script>
+    <script src='../js/aframe-gif-component.js'></script>
+    <script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function(){
             /*
@@ -35,12 +38,17 @@
             
             var cARd = new XREnvironment(5, 5, 5); // smart conrtact for a hyperreality space, the space is being used for business purposes hence the name "myOffice"
             
-            var portal = new XRPortal('home', {name: 'help', src: '../media/texture/ig-icon.png'});
-            portal.scale(2);
-            cARd.add(portal, '0 1.5 0');
+            var panel = new XRPanel('TV', {name: 'background', src: '../media/img/card.gif', gif: true});
+            panel.scale(4.5, 2.5);
+            
+           /* var portal = new XRPortal('Main', {name: 'home', src: '../media/img/dreamar.gif', gif: true});
+            portal.scale(0.8);
+*/            
+            cARd.add(panel, '0 1.5 0');
+  //          cARd.add(portal, '0 1.2 0.8');
             
             /*var CEO = new XRHumanBody('Patrice-Morgan', 1.85, 75.2);
-            var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);
+            var myOutfit = new XRBodyLayer('outfit0', [{name: 'regbodytop', obj: '../media/model/regbodytop.obj', mtl: '../media/model/regbodytop.mtl', png: '../media/model/regbodytop.png'},{},{},{},{}]);*/
             
             var instagramButton = new XRMenuButton('Instagram');
             var twitterButton = new XRMenuButton('Twitter');
@@ -62,15 +70,15 @@
             profileButton.scale(buttonSize);
             linkedInButton.scale(buttonSize);
             
-            CEO.addLayer(myOutfit);
-            cARd.add(CEO, '0 1.25 1');
+            //CEO.addLayer(myOutfit);
+            //cARd.add(CEO, '0 1.25 1');
             
-            /*
+            
             cARd.add(instagramButton, '1.5 0.5 1.2');
             cARd.add(twitterButton, '0.75 0.5 1.8');
             cARd.add(profileButton, '0 0.5 2');
             cARd.add(snapButton, '-0.75 0.5 1.8');
-            cARd.add(linkedInButton, '-1.5 0.5 1.2');*/
+            cARd.add(linkedInButton, '-1.5 0.5 1.2');/**/
             
             /*
             *   -----------------------------------------------------------------------------------------------------------
